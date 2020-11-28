@@ -18,7 +18,7 @@ navbar:
         href: files/presentation.pdf
 output_dir: "docs"
 include: ["files/*",".nojekyll"]
-exclude: ["header.html"]
+exclude: ["header.html","*.R"]
 output:
   html_document:
     css: style.css

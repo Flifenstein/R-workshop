@@ -8,7 +8,7 @@ View(netflix)
 install.packages("tidyverse")
 library(tidyverse)
 
-# 3. Explore the dataset  {.tabset  .tabset-pills}
+# 3. Explore the dataset
 glimpse(netflix)
 head(netflix)
 dim(netflix)
@@ -22,7 +22,7 @@ netflixclean <- netflix %>%
   select(!topNodeId, bookmark)
 glimpse(netflixlean)
 
-## 4.2 Recode values  {.tabset  .tabset-pills}
+## 4.2 Recode values
 netflixclean <- netflixclean %>% mutate_all(na_if,"")
 glimpse(netflixlean)
 
