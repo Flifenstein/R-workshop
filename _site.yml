@@ -1,0 +1,26 @@
+name: "R-workshop"
+navbar:
+  title: "R-Workshop"
+  right:
+    - text: "Home"
+      href: index.html
+    - text: "Assignments"
+      menu:
+      - text: "COVID-19"
+        href: covid.html
+      - text: "Netflix"
+        href: netflix.html
+    - text: "Resources"
+      menu:
+      - text: "Cheatsheet"
+        href: files/cheatsheet.pdf
+      - text: "Presentation"
+        href: files/presentation.pdf
+output_dir: "docs"
+include: ["files/*"]
+exclude: ["header.html"]
+output:
+  html_document:
+    css: style.css
+    includes:
+      in_header: header.html

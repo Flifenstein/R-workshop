@@ -1,0 +1,23 @@
+.scrollx {
+  background-color: white;
+  overflow-x: auto;
+}
+.scrollx > code {
+  white-space:pre
+}
+.error {
+  background-color: white;
+  color:red;
+}
+
+.tab-content {
+  position: relative;
+}
+.tab-content>.tab-pane:not(.active) {
+  visibility:hidden;
+  display:block;
+  position: absolute;
+  max-width:100%;
+  overflow: hidden;
+}
+.anchor-section {display:none}

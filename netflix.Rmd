@@ -1,0 +1,329 @@
+---
+title: "Netflix assignment"
+author: "Wouter & Ioana"
+date: "19/11/2020"
+output:
+  html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In this assignment you will analyze your own Netflix data using different types of tables and graphs.
+
+# 1. Download and import dataset {.tabset  .tabset-pills}
+
+## Question
+In order to download your own Netflix history viewing, please follow [these instructions](netflix_to_csv.html) where you have to bookmark the javascript code. Then access your Netflix profile in your web browser and click on the bookmark. Soon, a csv file called `ViewingActivity.csv` will automatically download. It will take around 10 seconds so please be patient (especially if you have a long Netflix viewing history)
+ 
+Now it is time to open R and import your dataset! The csv file will have the following variables:
+``` scrollx
+Rows: 1,925
+Columns: 16
+$ title            <chr> "Season 1: \"Armando mete la pata\"", "Season 1: \"Un mal ...
+$ videoTitle       <chr> "Armando mete la pata", "Un mal dÃ­a", "Buscado por la pol...
+$ movieID          <int> 81091849, 81091848, 81091847, 81091846, 81091845, 81091844...
+$ country          <chr> "NL", "NL", "NL", "NL", "NL", "NL", "NL", "NL", "NL", "NL"...
+$ bookmark         <int> 1431, 2633, 2617, 2633, 2623, 2634, 2614, 2644, 2626, 2617...
+$ duration         <int> 2619, 2643, 2622, 2643, 2628, 2645, 2614, 2644, 2625, 2624...
+$ date             <dbl> 1.605739e+12, 1.605739e+12, 1.605715e+12, 1.605709e+12, 1....
+$ deviceType       <int> 1481, 1481, 1481, 1481, 1481, 1481, 1481, 1481, 1481, 1481...
+$ dateStr          <chr> "11/18/20", "11/18/20", "11/18/20", "11/18/20", "11/17/20"...
+$ index            <int> 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, ...
+$ topNodeId        <int> 81091825, 81091825, 81091825, 81091825, 81091825, 81091825...
+$ series           <int> 81091825, 81091825, 81091825, 81091825, 81091825, 81091825...
+$ seriesTitle      <chr> "Betty en NY", "Betty en NY", "Betty en NY", "Betty en NY"...
+$ seasonDescriptor <chr> "Season 1", "Season 1", "Season 1", "Season 1", "Season 1"...
+$ episodeTitle     <chr> "Armando mete la pata", "Un mal dÃ­a", "Buscado por la pol...
+$ estRating        <int> 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31...
+```
+
+## Hint 1
+To check if your import went correctly, you can view the dataset using the `View()` command. You can check how to use that command using:
+```{r eval=FALSE}
+?View
+```
+
+## Hint 2
+You can see that this dataset is a CSV-file.  
+Try to find out how you can import a csv file in R, by googling [_import CSV-file in R_](https://www.google.com/search?q=import+csv-file+in+R).
+
+## Hint 3
+If you get the error message below, make sure you set the working directory to the directory in which the file is
+``` error
+Error in file(file, "rt") : cannot open the connection
+In addition: Warning message:
+In file(file, "rt") :
+  cannot open file 'NetflixViewing.csv': No such file or directory
+```
+If you do not know how to set your working directory, try googling [_set working directory in R_](https://www.google.com/search?q=set+working+directory+in+R)
+
+Do not forget your file downloaded in the Downloads folder. 
+
+## Hint 4
+You can use the function `read.csv()` to import a CSV-file. Use `?read.csv` to look at the documentation of this function, and look at some examples of how it is used, and look through the arguments to see if you might need one of them.
+```{r eval=FALSE}
+?read.csv
+```
+
+
+## Answer
+First, set the working directory to the place where your file is, using the `setwd()` command. In our case is in Downloads folder. You can do this by putting the path of this directory in the code. Make sure to change all backslashes (\\) to forward slashes (/) in that case. You can also select the working directory manually, by using the `choose.dir()` function.
+```{r eval=FALSE}
+setwd("C:/users/yourname/downloads") #Putting the path in the code
+setwd(choose.dir()) #Selecting the working directory by hand
+```
+After this, you can import the dataset. Because it is a CSV-file, you use the function `read.csv`. You can see in the file that different collumns are seperated by a semi-colon (;). Therefore, you need to set the `sep`-parameter to `";"`.
+```{r}
+#netflix <- read.csv("", sep=";")
+```
+To view the dataset, you can then use the `View()` command
+```{r eval=FALSE}
+View(netflix) 
+```
+or (we will mention it later as well)
+```{r eval=FALSE}
+glimpse(netflix) 
+
+```
+or simply jusy go in the Environment and click on the netflix data.
+
+# 2. Import Packages {.tabset  .tabset-pills}
+
+## Question
+In this assignment, you will need certain functions that are part of the `tidyverse` package. Please try to import that package.
+
+## Hint 1
+Make sure that you install the package first before importing it.  
+When installing it, you might see a warning like this
+``` error
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+```
+This does not mean that the installation failed. It is not necessary to install Rtools. If the installation gives the message below, your installation went successfully
+```
+package ‘tidyverse’ successfully unpacked and MD5 sums checked
+```
+If you do not know how to install a package, try googling [_install packages in R_](https://www.google.com/search?q=install+packages+in+R)
+
+## Hint 2
+When importing a package, you might get this message:
+```
+-- Attaching packages --------------------------------------- tidyverse 1.3.0 --
+v ggplot2 3.3.2     v purrr   0.3.4
+v tibble  3.0.3     v dplyr   1.0.2
+v tidyr   1.1.2     v stringr 1.4.0
+v readr   1.4.0     v forcats 0.5.0
+-- Conflicts ------------------------------------------ tidyverse_conflicts() --
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()
+```
+This does not mean the import failed. It just means that R imports several other packagestoo. These are packages that tidyverse needs to operate (dependencies). Sometimes, the same function name is used in multiple packages. That means that R will overwrite one function with another. These are conflicts. This is usually not a problem however, so you don't need to do anything with that.  
+If you do not know how to import a package, try googling [_import packages in R_](https://www.google.com/search?q=install+packages+in+R)
+
+## Answer
+If you have not used this library before, first install the package on your computer
+``` {r eval=FALSE}
+install.packages("tidyverse")
+```
+``` {r echo=FALSE}
+install.packages("tidyverse",repos="https://cran.rstudio.com/")
+```
+After this, you need to import the library
+``` {r}
+library(tidyverse)
+```
+
+
+# 3. Explore the dataset  {.tabset  .tabset-pills}
+
+## Question
+Explore the imported dataset. You can do this in various different ways.
+
+Look at these description of the dataset and look at the different variables.
+
+Try to find out:  
+- How many observations there are  
+- How many variables there are 
+- The names of the variables
+- The data-type of the variables  
+- Some of the values of the variables
+
+## Description
+This file contains 16 characteristics such Title, videoTitle, country, movieID, bookmark, date, deviceType, index, series, seriesTitle, etc.
+
+The file is structured as follows: Every time you watch a ovie or Tv show on netflix they will record the title, the episode tile, country where you watched, on which device, the date, duration of viewing and it will index it together with other information about the movie/TV show such as rating and ID. 
+
+Description of the variables
+
+**title**: Tile of the movie or episode
+
+**videoTitle**: title of the episode (without containing the season compared to the variable title)
+**movieID**: ID of the movie in Netflix database
+
+**devicetype**: label of the device, for example a PC compared to your phone
+
+**duration**: duration of you viewing in seconds
+
+**date**: date of viewing, however this data is mathetahically estimated to seconds so we made:
+
+**dateStr**: the date format for the date of viewing
+
+**index**: index that represent you viewing order , the latest episode being the most recent and the first time you watched something on netflix being the last.
+
+**series**: same as topNodeID, just an ID for the series
+
+**SeriesTile**: name of the series
+
+**episodeTitle**: name of the episode
+
+**estRating**: Netflix Rating
+
+*seasonDescriptor** : which season.
+
+## Hint 1
+Try googling for [_explore dataset in R_](https://www.google.com/search?q=explore+dataset+in+R)
+
+## Hint 2
+To explore a dataset, you can use one, for example, the `head()`, `dim()`, `summary()`, `glimpse()`, `names()` and `class()` functions. Use `?function_name` to find out how these functions work, and test them out to see which ones you like most.
+
+## Answer
+There are multiple ways to explore the dataset. The easiest way (in my opinion) is the `glimpse()` function.
+```{r eval=FALSE}
+glimpse(netflix)
+```
+As you see, it gives you the amount of rows (variables) and columns (observations). For each of the variables, it gives you the name, data-type (_`<chr>`_,_`<int>`_), and some of the values. There are also other functions you can use:
+``` {r eval=FALSE}
+head(netflix)
+# Shows you the first 6 observations from the dataset
+
+dim(netflix)
+# Gives you the amount of observations and variables
+
+summary(netflix)
+# Gives you the amount of observations and data-type for each variable. For numeric variables, it will also give you the mean, min, max, median, and quartiles.
+
+names(netflix)
+# Gives you the names of all the variables in the dataframe
+
+class(netflix$Date_file)
+# Gives you the data-type of the `Data_file` variable in the dataframe
+```
+# 4. Clean the dataset
+Now that we know how the dataset looks, we need to clean the dataset. In this process, we will only keep the relevant information, make sure that values are coded correctly, and that everything has the right data-type.
+
+## 4.1 Select relevant variables  {.tabset  .tabset-pills}
+
+### Question
+For our analysis,  we do not need  topnodeID and bookmark colums so w.e can remove them. Clean the dataset and save it in a new var called `Netflixclean`
+
+You can use the `glimpse()` command, to check if you did it correctly.
+``` {r eval=F}
+glimpse(netflixclean)
+```
+
+### Hint 1
+If you do not know how to select certain columns of a dataframe, try googling [_R select column in dataframe_](https://www.google.com/search?q=R+select+column+in+dataframe)
+
+### Hint 2
+To select certain columns, you can use the `select()` function. Use `?select` to find out how this function works.
+You can select all the variable that you want to keep, but also specifically select variables that you want to leave out.
+
+### Answer
+```{r eval=F}
+netflixclean <- netflix %>%
+  select(!topNodeId, bookmark)
+```
+The `!` means that you select all values except `bookmark`. It is also possible to just fill in all variables you want to keep. In that case, do not use the `!`.
+
+Make sure that the new dataset without this column is saved again in the variable.
+
+It is also possible to use the `subset()` function, but you do not need to know how that one works, but if you used it that is also correct.
+
+If you use `glimpse()` to check your dataset, your result should look like this:
+``` {r eval= FALSE}
+glimpse(netflixlean)
+```
+
+## 4.2 Recode values  {.tabset  .tabset-pills}
+
+### Question
+We see in the dataset that movies have no `seriesTitle` and `episodeTitle`. If we look closely in the dataset we can see there is a blank space and NA. These values are easy for us to understand, but not for R, since it doesn't understand language. Therefore, R will just treat this as text, and will not know that, for example, values with the value `"NA"` are missing.
+Therefore you need to recode these variables in the clean dataset. Please recode the missing variables to `NA` (Not available).
+
+
+
+Try to modify your previous command so it can both be done at once. You can use the `glimpse()` command, to check if you did it correctly.
+
+### Hint 1
+Use `is.na(netflixclean)` to check where your missing values are
+
+### Hint 2
+To perform multiple functions after each other, you can use the pipe command `%>%`.
+
+### Hint 3
+Search  for `?na_if` to see if a variable if not available
+
+### Hint 4
+Make sure you type  `NA` in capital letters without quotation marks, so R can understand it and "" for space.
+
+
+### Answer
+``` {r eval=F }
+netflixclean <- netflixclean %>% mutate_all(na_if,"")
+```
+
+
+If you use `glimpse()` to check your dataset, your result should look like this:
+``` {r eval= F}
+glimpse(netflixlean)
+```
+
+
+# 5. Visualize data
+```{r eval=F}
+
+# REMOVE OCCURRENCES WHERE SEASON AND EPISODE ARE EMPTY (BECAUSE THEY ARE NOT TV SERIES)
+
+netflixcleanseries<- na.omit(netflixclean)
+netflixcleanseries <- netflixcleanseries %>%
+  count(seriesTitle,dateStr)
+# LET'S CONSIDER "BINGE-WATCHING" 6 OR MORE EPISODES PER DAY AND SORT BY DATE
+netflixcleanseries<- netflixcleanseries[netflixcleanseries$n >= 6,]
+netflixcleanseries
+netflixcleanseries<- netflixcleanseries[order(netflixcleanseries$Date),]
+netflixcleanseries
+
+# GROUPING DATA BY TV SERIES TITLE AND SORTING BY NUMBER OF EPISODES VIEWED
+netflixcleanseries<- netflixcleanseries %>% 
+  group_by(seriesTitle) %>% 
+  summarise(n = sum(n)) %>%
+  arrange(desc(n))
+
+# PLOTTING TOP 10 OF BINGE-WATCHING TV SERIES
+netflixclean_top <- netflixcleanseries %>% 
+  top_n(10) %>%
+  ggplot(aes(x = reorder(seriesTitle, n), y = n)) +
+  geom_col(fill = "#0097d6") +
+  coord_flip() +
+  ggtitle("Top 10 tvshows") +
+  labs(x = "Series Netflix", y = "Total episodes") +
+  theme_minimal()
+
+netflixclean_top
+```
+
+
+```{r eval= F}
+netflix %>%
+  select(title,duration,date,series) %>%
+  mutate(
+    date = as.POSIXct(date/1000, origin='1970-01-01'),
+    type = ifelse(is.na(netflix$series), "Film", "Series")
+  ) %>%
+  ggplot(aes(x = date, weight = duration/60/60, fill = type)) +
+  geom_histogram(binwidth=60*60*24*7)+
+  labs(y = "Hours per week", x = "Date", title = "Netflix Watchtime", color="Type", fill="Type")
+```

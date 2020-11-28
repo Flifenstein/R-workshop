@@ -1,0 +1,29 @@
+---
+title: "R-Workshop"
+author: "By Wouter & Ioana"
+date: "19/11/2020"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+You will now be divided into groups, and will make an assignment together. These assignments contain hints and answers, but please try to use your own problem solving skills first, before looking at them.
+
+# Assignments
+
+We have two assignments prepared for you
+
+* [COVID-19](covid.html)  
+In this assignment you will analyze the COVID-19 cases in the Netherlands.
+* [Netflix](netflix.html)  
+In this assignmet you will analyze your own viewing history on Netflix.
+
+# Resources
+
+We have collected the following resources for you:
+
+* [Cheatsheet](files/cheatsheet.pdf)  
+An overview of everything you need to know, so you can easily look things up
+* [Presentation](files/presentation.pdf)  
+The slides of the presentation we gave at the beginning

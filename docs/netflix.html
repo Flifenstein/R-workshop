@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Wouter &amp; Ioana" />
+
+
+<title>Netflix assignment</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+<script src="script.js" type="text/javascript"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R-Workshop</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Assignments
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="covid.html">COVID-19</a>
+    </li>
+    <li>
+      <a href="netflix.html">Netflix</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="files/cheatsheet.pdf">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="files/presentation.pdf">Presentation</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Netflix assignment</h1>
+<h4 class="author">Wouter &amp; Ioana</h4>
+<h4 class="date">19/11/2020</h4>
+
+</div>
+
+
+<p>In this assignment you will analyze your own Netflix data using different types of tables and graphs.</p>
+<div id="download-and-import-dataset" class="section level1 tabset tabset-pills">
+<h1>1. Download and import dataset</h1>
+<div id="question" class="section level2">
+<h2>Question</h2>
+<p>In order to download your own Netflix history viewing, please follow <a href="netflix_to_csv.html">these instructions</a> where you have to bookmark the javascript code. Then access your Netflix profile in your web browser and click on the bookmark. Soon, a csv file called <code>ViewingActivity.csv</code> will automatically download. It will take around 10 seconds so please be patient (especially if you have a long Netflix viewing history)</p>
+<p>Now it is time to open R and import your dataset! The csv file will have the following variables:</p>
+<pre class="scrollx"><code>Rows: 1,925
+Columns: 16
+$ title            &lt;chr&gt; &quot;Season 1: \&quot;Armando mete la pata\&quot;&quot;, &quot;Season 1: \&quot;Un mal ...
+$ videoTitle       &lt;chr&gt; &quot;Armando mete la pata&quot;, &quot;Un mal dÃ­a&quot;, &quot;Buscado por la pol...
+$ movieID          &lt;int&gt; 81091849, 81091848, 81091847, 81091846, 81091845, 81091844...
+$ country          &lt;chr&gt; &quot;NL&quot;, &quot;NL&quot;, &quot;NL&quot;, &quot;NL&quot;, &quot;NL&quot;, &quot;NL&quot;, &quot;NL&quot;, &quot;NL&quot;, &quot;NL&quot;, &quot;NL&quot;...
+$ bookmark         &lt;int&gt; 1431, 2633, 2617, 2633, 2623, 2634, 2614, 2644, 2626, 2617...
+$ duration         &lt;int&gt; 2619, 2643, 2622, 2643, 2628, 2645, 2614, 2644, 2625, 2624...
+$ date             &lt;dbl&gt; 1.605739e+12, 1.605739e+12, 1.605715e+12, 1.605709e+12, 1....
+$ deviceType       &lt;int&gt; 1481, 1481, 1481, 1481, 1481, 1481, 1481, 1481, 1481, 1481...
+$ dateStr          &lt;chr&gt; &quot;11/18/20&quot;, &quot;11/18/20&quot;, &quot;11/18/20&quot;, &quot;11/18/20&quot;, &quot;11/17/20&quot;...
+$ index            &lt;int&gt; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, ...
+$ topNodeId        &lt;int&gt; 81091825, 81091825, 81091825, 81091825, 81091825, 81091825...
+$ series           &lt;int&gt; 81091825, 81091825, 81091825, 81091825, 81091825, 81091825...
+$ seriesTitle      &lt;chr&gt; &quot;Betty en NY&quot;, &quot;Betty en NY&quot;, &quot;Betty en NY&quot;, &quot;Betty en NY&quot;...
+$ seasonDescriptor &lt;chr&gt; &quot;Season 1&quot;, &quot;Season 1&quot;, &quot;Season 1&quot;, &quot;Season 1&quot;, &quot;Season 1&quot;...
+$ episodeTitle     &lt;chr&gt; &quot;Armando mete la pata&quot;, &quot;Un mal dÃ­a&quot;, &quot;Buscado por la pol...
+$ estRating        &lt;int&gt; 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31...</code></pre>
+</div>
+<div id="hint-1" class="section level2">
+<h2>Hint 1</h2>
+<p>To check if your import went correctly, you can view the dataset using the <code>View()</code> command. You can check how to use that command using:</p>
+<pre class="r"><code>?View</code></pre>
+</div>
+<div id="hint-2" class="section level2">
+<h2>Hint 2</h2>
+<p>You can see that this dataset is a CSV-file.<br />
+Try to find out how you can import a csv file in R, by googling <a href="https://www.google.com/search?q=import+csv-file+in+R"><em>import CSV-file in R</em></a>.</p>
+</div>
+<div id="hint-3" class="section level2">
+<h2>Hint 3</h2>
+<p>If you get the error message below, make sure you set the working directory to the directory in which the file is</p>
+<pre class="error"><code>Error in file(file, &quot;rt&quot;) : cannot open the connection
+In addition: Warning message:
+In file(file, &quot;rt&quot;) :
+  cannot open file &#39;NetflixViewing.csv&#39;: No such file or directory</code></pre>
+<p>If you do not know how to set your working directory, try googling <a href="https://www.google.com/search?q=set+working+directory+in+R"><em>set working directory in R</em></a></p>
+<p>Do not forget your file downloaded in the Downloads folder.</p>
+</div>
+<div id="hint-4" class="section level2">
+<h2>Hint 4</h2>
+<p>You can use the function <code>read.csv()</code> to import a CSV-file. Use <code>?read.csv</code> to look at the documentation of this function, and look at some examples of how it is used, and look through the arguments to see if you might need one of them.</p>
+<pre class="r"><code>?read.csv</code></pre>
+</div>
+<div id="answer" class="section level2">
+<h2>Answer</h2>
+<p>First, set the working directory to the place where your file is, using the <code>setwd()</code> command. In our case is in Downloads folder. You can do this by putting the path of this directory in the code. Make sure to change all backslashes (\) to forward slashes (/) in that case. You can also select the working directory manually, by using the <code>choose.dir()</code> function.</p>
+<pre class="r"><code>setwd(&quot;C:/users/yourname/downloads&quot;) #Putting the path in the code
+setwd(choose.dir()) #Selecting the working directory by hand</code></pre>
+<p>After this, you can import the dataset. Because it is a CSV-file, you use the function <code>read.csv</code>. You can see in the file that different collumns are seperated by a semi-colon (;). Therefore, you need to set the <code>sep</code>-parameter to <code>";"</code>.</p>
+<pre class="r"><code>#netflix &lt;- read.csv(&quot;&quot;, sep=&quot;;&quot;)</code></pre>
+<p>To view the dataset, you can then use the <code>View()</code> command</p>
+<pre class="r"><code>View(netflix) </code></pre>
+<p>or (we will mention it later as well)</p>
+<pre class="r"><code>glimpse(netflix) </code></pre>
+<p>or simply jusy go in the Environment and click on the netflix data.</p>
+</div>
+</div>
+<div id="import-packages" class="section level1 tabset tabset-pills">
+<h1>2. Import Packages</h1>
+<div id="question-1" class="section level2">
+<h2>Question</h2>
+<p>In this assignment, you will need certain functions that are part of the <code>tidyverse</code> package. Please try to import that package.</p>
+</div>
+<div id="hint-1-1" class="section level2">
+<h2>Hint 1</h2>
+<p>Make sure that you install the package first before importing it.<br />
+When installing it, you might see a warning like this</p>
+<pre class="error"><code>WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/</code></pre>
+<p>This does not mean that the installation failed. It is not necessary to install Rtools. If the installation gives the message below, your installation went successfully</p>
+<pre><code>package ‘tidyverse’ successfully unpacked and MD5 sums checked</code></pre>
+<p>If you do not know how to install a package, try googling <a href="https://www.google.com/search?q=install+packages+in+R"><em>install packages in R</em></a></p>
+</div>
+<div id="hint-2-1" class="section level2">
+<h2>Hint 2</h2>
+<p>When importing a package, you might get this message:</p>
+<pre><code>-- Attaching packages --------------------------------------- tidyverse 1.3.0 --
+v ggplot2 3.3.2     v purrr   0.3.4
+v tibble  3.0.3     v dplyr   1.0.2
+v tidyr   1.1.2     v stringr 1.4.0
+v readr   1.4.0     v forcats 0.5.0
+-- Conflicts ------------------------------------------ tidyverse_conflicts() --
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()</code></pre>
+<p>This does not mean the import failed. It just means that R imports several other packagestoo. These are packages that tidyverse needs to operate (dependencies). Sometimes, the same function name is used in multiple packages. That means that R will overwrite one function with another. These are conflicts. This is usually not a problem however, so you don’t need to do anything with that.<br />
+If you do not know how to import a package, try googling <a href="https://www.google.com/search?q=install+packages+in+R"><em>import packages in R</em></a></p>
+</div>
+<div id="answer-1" class="section level2">
+<h2>Answer</h2>
+<p>If you have not used this library before, first install the package on your computer</p>
+<pre class="r"><code>install.packages(&quot;tidyverse&quot;)</code></pre>
+<pre><code>## Warning: package &#39;tidyverse&#39; is in use and will not be installed</code></pre>
+<p>After this, you need to import the library</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+</div>
+</div>
+<div id="explore-the-dataset" class="section level1 tabset tabset-pills">
+<h1>3. Explore the dataset</h1>
+<div id="question-2" class="section level2">
+<h2>Question</h2>
+<p>Explore the imported dataset. You can do this in various different ways.</p>
+<p>Look at these description of the dataset and look at the different variables.</p>
+<p>Try to find out:<br />
+- How many observations there are<br />
+- How many variables there are - The names of the variables - The data-type of the variables<br />
+- Some of the values of the variables</p>
+</div>
+<div id="description" class="section level2">
+<h2>Description</h2>
+<p>This file contains 16 characteristics such Title, videoTitle, country, movieID, bookmark, date, deviceType, index, series, seriesTitle, etc.</p>
+<p>The file is structured as follows: Every time you watch a ovie or Tv show on netflix they will record the title, the episode tile, country where you watched, on which device, the date, duration of viewing and it will index it together with other information about the movie/TV show such as rating and ID.</p>
+<p>Description of the variables</p>
+<p><strong>title</strong>: Tile of the movie or episode</p>
+<p><strong>videoTitle</strong>: title of the episode (without containing the season compared to the variable title) <strong>movieID</strong>: ID of the movie in Netflix database</p>
+<p><strong>devicetype</strong>: label of the device, for example a PC compared to your phone</p>
+<p><strong>duration</strong>: duration of you viewing in seconds</p>
+<p><strong>date</strong>: date of viewing, however this data is mathetahically estimated to seconds so we made:</p>
+<p><strong>dateStr</strong>: the date format for the date of viewing</p>
+<p><strong>index</strong>: index that represent you viewing order , the latest episode being the most recent and the first time you watched something on netflix being the last.</p>
+<p><strong>series</strong>: same as topNodeID, just an ID for the series</p>
+<p><strong>SeriesTile</strong>: name of the series</p>
+<p><strong>episodeTitle</strong>: name of the episode</p>
+<p><strong>estRating</strong>: Netflix Rating</p>
+<p>*seasonDescriptor** : which season.</p>
+</div>
+<div id="hint-1-2" class="section level2">
+<h2>Hint 1</h2>
+<p>Try googling for <a href="https://www.google.com/search?q=explore+dataset+in+R"><em>explore dataset in R</em></a></p>
+</div>
+<div id="hint-2-2" class="section level2">
+<h2>Hint 2</h2>
+<p>To explore a dataset, you can use one, for example, the <code>head()</code>, <code>dim()</code>, <code>summary()</code>, <code>glimpse()</code>, <code>names()</code> and <code>class()</code> functions. Use <code>?function_name</code> to find out how these functions work, and test them out to see which ones you like most.</p>
+</div>
+<div id="answer-2" class="section level2">
+<h2>Answer</h2>
+<p>There are multiple ways to explore the dataset. The easiest way (in my opinion) is the <code>glimpse()</code> function.</p>
+<pre class="r"><code>glimpse(netflix)</code></pre>
+<p>As you see, it gives you the amount of rows (variables) and columns (observations). For each of the variables, it gives you the name, data-type (<em><code>&lt;chr&gt;</code></em>,<em><code>&lt;int&gt;</code></em>), and some of the values. There are also other functions you can use:</p>
+<pre class="r"><code>head(netflix)
+# Shows you the first 6 observations from the dataset
+
+dim(netflix)
+# Gives you the amount of observations and variables
+
+summary(netflix)
+# Gives you the amount of observations and data-type for each variable. For numeric variables, it will also give you the mean, min, max, median, and quartiles.
+
+names(netflix)
+# Gives you the names of all the variables in the dataframe
+
+class(netflix$Date_file)
+# Gives you the data-type of the `Data_file` variable in the dataframe</code></pre>
+</div>
+</div>
+<div id="clean-the-dataset" class="section level1">
+<h1>4. Clean the dataset</h1>
+<p>Now that we know how the dataset looks, we need to clean the dataset. In this process, we will only keep the relevant information, make sure that values are coded correctly, and that everything has the right data-type.</p>
+<div id="select-relevant-variables" class="section level2 tabset tabset-pills">
+<h2>4.1 Select relevant variables</h2>
+<div id="question-3" class="section level3">
+<h3>Question</h3>
+<p>For our analysis, we do not need topnodeID and bookmark colums so w.e can remove them. Clean the dataset and save it in a new var called <code>Netflixclean</code></p>
+<p>You can use the <code>glimpse()</code> command, to check if you did it correctly.</p>
+<pre class="r"><code>glimpse(netflixclean)</code></pre>
+</div>
+<div id="hint-1-3" class="section level3">
+<h3>Hint 1</h3>
+<p>If you do not know how to select certain columns of a dataframe, try googling <a href="https://www.google.com/search?q=R+select+column+in+dataframe"><em>R select column in dataframe</em></a></p>
+</div>
+<div id="hint-2-3" class="section level3">
+<h3>Hint 2</h3>
+<p>To select certain columns, you can use the <code>select()</code> function. Use <code>?select</code> to find out how this function works. You can select all the variable that you want to keep, but also specifically select variables that you want to leave out.</p>
+</div>
+<div id="answer-3" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>netflixclean &lt;- netflix %&gt;%
+  select(!topNodeId, bookmark)</code></pre>
+<p>The <code>!</code> means that you select all values except <code>bookmark</code>. It is also possible to just fill in all variables you want to keep. In that case, do not use the <code>!</code>.</p>
+<p>Make sure that the new dataset without this column is saved again in the variable.</p>
+<p>It is also possible to use the <code>subset()</code> function, but you do not need to know how that one works, but if you used it that is also correct.</p>
+<p>If you use <code>glimpse()</code> to check your dataset, your result should look like this:</p>
+<pre class="r"><code>glimpse(netflixlean)</code></pre>
+</div>
+</div>
+<div id="recode-values" class="section level2 tabset tabset-pills">
+<h2>4.2 Recode values</h2>
+<div id="question-4" class="section level3">
+<h3>Question</h3>
+<p>We see in the dataset that movies have no <code>seriesTitle</code> and <code>episodeTitle</code>. If we look closely in the dataset we can see there is a blank space and NA. These values are easy for us to understand, but not for R, since it doesn’t understand language. Therefore, R will just treat this as text, and will not know that, for example, values with the value <code>"NA"</code> are missing. Therefore you need to recode these variables in the clean dataset. Please recode the missing variables to <code>NA</code> (Not available).</p>
+<p>Try to modify your previous command so it can both be done at once. You can use the <code>glimpse()</code> command, to check if you did it correctly.</p>
+</div>
+<div id="hint-1-4" class="section level3">
+<h3>Hint 1</h3>
+<p>Use <code>is.na(netflixclean)</code> to check where your missing values are</p>
+</div>
+<div id="hint-2-4" class="section level3">
+<h3>Hint 2</h3>
+<p>To perform multiple functions after each other, you can use the pipe command <code>%&gt;%</code>.</p>
+</div>
+<div id="hint-3-1" class="section level3">
+<h3>Hint 3</h3>
+<p>Search for <code>?na_if</code> to see if a variable if not available</p>
+</div>
+<div id="hint-4-1" class="section level3">
+<h3>Hint 4</h3>
+<p>Make sure you type <code>NA</code> in capital letters without quotation marks, so R can understand it and "" for space.</p>
+</div>
+<div id="answer-4" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>netflixclean &lt;- netflixclean %&gt;% mutate_all(na_if,&quot;&quot;)</code></pre>
+<p>If you use <code>glimpse()</code> to check your dataset, your result should look like this:</p>
+<pre class="r"><code>glimpse(netflixlean)</code></pre>
+</div>
+</div>
+</div>
+<div id="visualize-data" class="section level1">
+<h1>5. Visualize data</h1>
+<pre class="r"><code># REMOVE OCCURRENCES WHERE SEASON AND EPISODE ARE EMPTY (BECAUSE THEY ARE NOT TV SERIES)
+
+netflixcleanseries&lt;- na.omit(netflixclean)
+netflixcleanseries &lt;- netflixcleanseries %&gt;%
+  count(seriesTitle,dateStr)
+# LET&#39;S CONSIDER &quot;BINGE-WATCHING&quot; 6 OR MORE EPISODES PER DAY AND SORT BY DATE
+netflixcleanseries&lt;- netflixcleanseries[netflixcleanseries$n &gt;= 6,]
+netflixcleanseries
+netflixcleanseries&lt;- netflixcleanseries[order(netflixcleanseries$Date),]
+netflixcleanseries
+
+# GROUPING DATA BY TV SERIES TITLE AND SORTING BY NUMBER OF EPISODES VIEWED
+netflixcleanseries&lt;- netflixcleanseries %&gt;% 
+  group_by(seriesTitle) %&gt;% 
+  summarise(n = sum(n)) %&gt;%
+  arrange(desc(n))
+
+# PLOTTING TOP 10 OF BINGE-WATCHING TV SERIES
+netflixclean_top &lt;- netflixcleanseries %&gt;% 
+  top_n(10) %&gt;%
+  ggplot(aes(x = reorder(seriesTitle, n), y = n)) +
+  geom_col(fill = &quot;#0097d6&quot;) +
+  coord_flip() +
+  ggtitle(&quot;Top 10 tvshows&quot;) +
+  labs(x = &quot;Series Netflix&quot;, y = &quot;Total episodes&quot;) +
+  theme_minimal()
+
+netflixclean_top</code></pre>
+<pre class="r"><code>netflix %&gt;%
+  select(title,duration,date,series) %&gt;%
+  mutate(
+    date = as.POSIXct(date/1000, origin=&#39;1970-01-01&#39;),
+    type = ifelse(is.na(netflix$series), &quot;Film&quot;, &quot;Series&quot;)
+  ) %&gt;%
+  ggplot(aes(x = date, weight = duration/60/60, fill = type)) +
+  geom_histogram(binwidth=60*60*24*7)+
+  labs(y = &quot;Hours per week&quot;, x = &quot;Date&quot;, title = &quot;Netflix Watchtime&quot;, color=&quot;Type&quot;, fill=&quot;Type&quot;)</code></pre>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
