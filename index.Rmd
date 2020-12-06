@@ -18,6 +18,8 @@ We have two assignments prepared for you
 In this assignment you will analyze the COVID-19 cases in the Netherlands.
 * [Netflix](netflix.html)  
 In this assignmet you will analyze your own viewing history on Netflix.
+* [WhatsApp](whatsapp.html)  
+In this assignment you will analyze your own WhatsApp conversations.
 
 # Resources
 

@@ -10,6 +10,8 @@ navbar:
         href: covid.html
       - text: "Netflix"
         href: netflix.html
+      - text: "WhatsApp"
+        href: whatsapp.html
     - text: "Resources"
       menu:
       - text: "Cheatsheet"

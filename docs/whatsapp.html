@@ -1,0 +1,2168 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="By Wouter Stoter" />
+
+
+<title>WhatsApp R-assignment</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+<script src="script.js" type="text/javascript"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R-Workshop</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Assignments
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="covid.html">COVID-19</a>
+    </li>
+    <li>
+      <a href="netflix.html">Netflix</a>
+    </li>
+    <li>
+      <a href="whatsapp.html">WhatsApp</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="files/cheatsheet.pdf">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="files/presentation.pdf">Presentation</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">WhatsApp R-assignment</h1>
+<h4 class="author">By Wouter Stoter</h4>
+<h4 class="date">6/12/2020</h4>
+
+</div>
+
+
+<p>In this assignment you will analyze your own WhatsApp conversations. You will first import the conversation as a corpus, then you will clean it, you will visualize the most used words with a wordcoud and you will use machine learning to identify the author of messages.</p>
+<p>There are hints and answers present in the document, but try to only look at them if you get stuck. After you found the answer, it can still be helpfull to look back at the hints to understand your code better.</p>
+<div id="import-packages" class="section level1 tabset tabset-pills">
+<h1>1. Import Packages</h1>
+<div id="question" class="section level2">
+<h2>Question</h2>
+<p>In this assignment, you will need certain functions that are part of the following packages.</p>
+<ul>
+<li><code>tidyverse</code></li>
+<li><code>tm</code></li>
+<li><code>wordcloud</code></li>
+<li><code>rpart</code></li>
+<li><code>rpart.plot</code></li>
+<li><code>janitor</code></li>
+<li><code>broom</code></li>
+</ul>
+<p>Please import these packages.</p>
+</div>
+<div id="hint-1" class="section level2">
+<h2>Hint 1</h2>
+<p>Make sure that you install the package first before importing it.<br />
+When installing it, you might see a warning like this</p>
+<pre class="error"><code>WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/</code></pre>
+<p>This does not mean that the installation failed. It is not necessary to install Rtools. If the istallation gives the message below, your installation went successfully</p>
+<pre><code>package ‘tidyverse’ successfully unpacked and MD5 sums checked</code></pre>
+<p>If you do not know how to install a package, try googling <a href="https://www.google.com/search?q=install+packages+in+R"><em>install packages in R</em></a></p>
+</div>
+<div id="hint-2" class="section level2">
+<h2>Hint 2</h2>
+<p>When importing a package, you might get this message:</p>
+<pre><code>-- Attaching packages --------------------------------------- tidyverse 1.3.0 --
+v ggplot2 3.3.2     v purrr   0.3.4
+v tibble  3.0.3     v dplyr   1.0.2
+v tidyr   1.1.2     v stringr 1.4.0
+v readr   1.4.0     v forcats 0.5.0
+-- Conflicts ------------------------------------------ tidyverse_conflicts() --
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()</code></pre>
+<p>This does not mean the import failed. It just means that R imports several other packagestoo. These are packages that tidyverse needs to operate (dependencies). Sometimes, the same function name is used in multiple packages. That means that R will overwrite one function with another. These are conflicts. This is usually not a problem however, so you don’t need to do anything with that.<br />
+If you do not know how to import a package, try googling <a href="https://www.google.com/search?q=install+packages+in+R"><em>import packages in R</em></a></p>
+</div>
+<div id="answer" class="section level2">
+<h2>Answer</h2>
+<p>If you have not used this library before, first install the package on your computer</p>
+<pre class="r"><code>install.packages(&quot;tidyverse&quot;)
+install.packages(&quot;tm&quot;)
+install.packages(&quot;wordcloud&quot;)
+install.packages(&quot;rpart&quot;)
+install.packages(&quot;rpart.plot&quot;)
+install.packages(&quot;janitor&quot;)
+install.packages(&quot;broom&quot;)</code></pre>
+<p>Then you can import them</p>
+<pre class="r"><code>library(tidyverse)
+library(tm)
+## Loading required package: NLP
+## 
+## Attaching package: &#39;NLP&#39;
+## The following object is masked from &#39;package:ggplot2&#39;:
+## 
+##     annotate
+library(wordcloud)
+## Loading required package: RColorBrewer
+library(rpart)
+library(rpart.plot)
+library(janitor)
+## 
+## Attaching package: &#39;janitor&#39;
+## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     chisq.test, fisher.test
+library(broom)</code></pre>
+</div>
+</div>
+<div id="export-and-import-data" class="section level1">
+<h1>2. Export and import data</h1>
+<div id="export-whatsapp-conversation" class="section level2">
+<h2>2.1 Export Whatsapp conversation</h2>
+<p>Go to a WhatsApp conversation with someone and export it. You can do that by pressing the 3 dots in the top-right corner, them press <strong>More</strong> and then press <strong>Export chat</strong>.</p>
+<video src="files/WA_export.mp4" height="480px" loop muted autoplay>
+</video>
+<p>Then you can send the exported file to your computer, using e-mail, for example.</p>
+</div>
+<div id="convert-the-file" class="section level2">
+<h2>2.2 Convert the file</h2>
+<p>Select the file below to convert it to a corpus that can be used in R. This can take some time, especially if you have a long history.</p>
+<script src="https://stuk.github.io/jszip/dist/jszip.min.js"></script>
+<input type="file" id="wa_convert" name="WhatsApp conversation" accept=".txt"/>
+<script>
+  document.getElementById("wa_convert").onchange = function(e) {
+    var fakepath = this.value;
+    var file = e.target.files[0];
+    var fr = new FileReader();
+    fr.onload = function(e) {
+      var text = e.target.result.split("\n");
+      var messages = [];
+      var authors = {};
+      // Convert to JSON
+      for (l = 0; l < text.length; ++l) {
+        var time = text[l].split(" - ").slice(0,-1)[0];
+        if (!/^[0-9\.\/:, APM]{11,19}$/.test(time)) time = undefined;
+        if (!time && messages.length > 0) {
+          messages[messages.length - 1].text += "\n" + text[l]
+        } else {
+          if (time) text[l] = text[l].slice((time + " - ").length);
+          var author = text[l].split(": ").slice(0,-1)[0];
+          if (author) {
+            text[l] = text[l].slice((author + ": ").length);
+            if (!authors[author]) authors[author] = {name: author, messages: 0};
+            authors[author].messages++;
+          }
+          messages.push({
+            "time": time,
+            "author": author,
+            "text": text[l]
+          });
+        }
+      }
+      console.log(messages);
+      console.log(authors);
+      // Convert to ZIP
+      var zip = new JSZip();
+      var counter = 0;
+      messages = messages.filter(a => a.author)
+      for (i = 0; i < messages.length; ++i) {
+        if (i>0 && messages[i-1].time == messages[i].time) {
+          counter++;
+        } else {
+          counter = 0;
+        }
+        var filename = 
+          messages[i].author.replace(/["\*:<>?\/\\|]/g,"_") + 
+          "/" + 
+          messages[i].time.replace(/["\*:<>?\/\\|]/g,"_") + 
+          (counter ? " (" + counter + ")" : "") + 
+          ".txt";
+        ["<Media omitted>"].forEach(a => messages[i].text = messages[i].text.replaceAll(a,""));
+        if (messages[i].author && messages[i].text) zip.file(filename, messages[i].text);
+      }
+      console.log(zip);
+      //download zip
+      zip.generateAsync({type:"blob"})
+      .then(function (blob) {
+        var link = document.createElement("a"); // Or maybe get it from the current document
+        link.href = URL.createObjectURL(blob);
+        link.download = file.name.replace(".txt",".zip");
+        document.body.appendChild(link);
+        link.click();
+        URL.revokeObjectURL(link.href);
+        document.body.removeChild(link);
+        delete link;
+      });
+      //adjust code
+      authors = Object.values(authors).sort((a,b) => a.messages - b.messages).sort((a,b) => file.name.indexOf(a.name));
+      if (authors.length >= 2) {
+        var path = fakepath.replace(".txt","") + (fakepath.indexOf("/") == -1 ? "\\" : "/");
+        var path_a = JSON.stringify(path + authors[0].name.replace(/["\*:<>?\/\\|]/g,"_"));
+        var path_b = JSON.stringify(path + authors[1].name.replace(/["\*:<>?\/\\|]/g,"_"));
+      } else {
+        var path_a = JSON.stringify("C:\\fakepath\\WhatsApp Chat with Ioana Frîncu\\Wouter Stoter");
+        var path_b = JSON.stringify("C:\\fakepath\\WhatsApp Chat with Ioana Frîncu\\Ioana Frîncu");
+      }
+      document.querySelectorAll("#adjust_names .hljs-string")[0].innerText = path_a;
+      document.querySelectorAll("#adjust_names .hljs-string")[1].innerText = path_b;
+    }
+    fr.readAsText(file);
+  }
+</script>
+<p><font size="1pt">The conversation will take place locally, so your file will not be uploaded or stored on any server.</font></p>
+<p>Please unzip the resulted file and copy the file location. For each person in the conversation, you will now have a folder with for each message they’ve sent a text-file.</p>
+</div>
+<div id="import-the-data-in-r" class="section level2 tabset tabset-pills">
+<h2>2.3 Import the data in R</h2>
+<div id="question-1" class="section level3">
+<h3>Question</h3>
+<p>Save the paths of the two folders with text files you have now in two variables, and use those variables to import the files in those folders as a corpus</p>
+</div>
+<div id="hint-1-1" class="section level3">
+<h3>Hint 1</h3>
+<p>If your path contains any backslashes (<code>\</code>), you need to replace them with forward slashes (<code>/</code>) or double backslashes (<code>\\</code>)</p>
+</div>
+<div id="hint-2-1" class="section level3">
+<h3>Hint 2</h3>
+<p>You can check if the directory path is correct using the <code>dir()</code> command. If the path is correct, this will give you a list of all filenames in the folder</p>
+<pre class="r"><code>path &lt;- &quot;C:\\fakepath&quot;
+dir(path)</code></pre>
+</div>
+<div id="hint-3" class="section level3">
+<h3>Hint 3</h3>
+<p>You need to import the folder for each author separately</p>
+</div>
+<div id="hint-4" class="section level3">
+<h3>Hint 4</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2043466">tutorial about <em>Text mining introduction</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-5" class="section level3">
+<h3>Hint 5</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code># we can do that directly;
+path_fake &lt;- &quot;/Users/stephanievandenberg/Desktop/News/FakeNews&quot; 
+
+# note that I&#39;m using a Mac, and my username is &quot;stephanievandenberg&quot;. 
+# I&#39;ve created a &#39;News&#39; folder on the desktop into which I&#39;ve extracted the folders
+# with the fake and real news articles.
+# For Windows PCs, the path will be something like 
+# &quot;C:/Users/YourUserName/Desktop/News/FakeNews&quot;.
+# You can also use &quot;C:\\Users\\YourUserName\\Desktop\\News\\FakeNews&quot;
+
+# confirm that the fake articles are indeed in this folder;
+dir(path_fake) 
+
+# create a corpus `VCorpus( ... )` from a folder (directory) source `DirSource( ... )`
+fake_corpus &lt;- VCorpus(DirSource(path_fake))
+
+# get a path to the &#39;real news&#39; data
+path_real &lt;- &quot;/Users/stephanievandenberg/Desktop/News/RealNews&quot;
+
+# check the path
+dir(path_real)
+
+# generate the real corpus
+real_corpus &lt;- VCorpus(DirSource(path_real))</code></pre>
+</div>
+<div id="adjust_names" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code># Set the path of the folders
+path_a &lt;- &quot;C:\\fakepath\\WhatsApp Chat with Ioana Frîncu\\Wouter Stoter&quot; 
+path_b &lt;- &quot;C:\\fakepath\\WhatsApp Chat with Ioana Frîncu\\Ioana Frîncu&quot;
+
+# Check content of the folders
+dir(path_a)
+dir(path_b)
+
+#Import the content of the folders as a corpus
+corpus_a &lt;- VCorpus(DirSource(path_a))
+corpus_b &lt;- VCorpus(DirSource(path_b))</code></pre>
+</div>
+</div>
+</div>
+<div id="explore-dataset" class="section level1">
+<h1>3. Explore dataset</h1>
+<div id="file-list" class="section level2 tabset tabset-pills">
+<h2>3.1 File list</h2>
+<div id="question-2" class="section level3">
+<h3>Question</h3>
+<p>Try to get the file list from your first corpus</p>
+</div>
+<div id="hint-1-2" class="section level3">
+<h3>Hint 1</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2043466">tutorial about <em>Text mining introduction</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-2-2" class="section level3">
+<h3>Hint 2</h3>
+<p>You can use the ‘summary()’ function to get the summary of the corpus. You can type <code>?summary</code> to find out how this function works.</p>
+</div>
+<div id="hint-3-1" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code># check contents of the corpus
+summary(fake_corpus)</code></pre>
+</div>
+<div id="answer-1" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>summary(corpus_a)</code></pre>
+<pre><code>##                         Length Class             Mode
+## 10_15_20, 14_34.txt     2      PlainTextDocument list
+## 10_15_20, 14_35 (1).txt 2      PlainTextDocument list
+## 10_21_20, 10_47.txt     2      PlainTextDocument list
+## 10_31_20, 12_38.txt     2      PlainTextDocument list
+## 10_31_20, 15_37.txt     2      PlainTextDocument list
+## 10_31_20, 15_56.txt     2      PlainTextDocument list
+## 11_1_20, 10_14.txt      2      PlainTextDocument list
+## 11_10_20, 18_34.txt     2      PlainTextDocument list
+## 11_10_20, 18_39.txt     2      PlainTextDocument list
+## 11_10_20, 18_40 (1).txt 2      PlainTextDocument list
+## 11_10_20, 18_44.txt     2      PlainTextDocument list
+## 11_12_20, 20_24.txt     2      PlainTextDocument list
+## 11_12_20, 20_25 (1).txt 2      PlainTextDocument list
+## 11_12_20, 20_27.txt     2      PlainTextDocument list
+## 11_12_20, 20_51.txt     2      PlainTextDocument list
+## 11_12_20, 22_59.txt     2      PlainTextDocument list
+## 11_13_20, 00_46.txt     2      PlainTextDocument list
+## 11_13_20, 08_06.txt     2      PlainTextDocument list
+## 11_13_20, 12_40.txt     2      PlainTextDocument list
+## 11_14_20, 12_43 (1).txt 2      PlainTextDocument list
+## 11_14_20, 14_24.txt     2      PlainTextDocument list
+## 11_14_20, 14_41.txt     2      PlainTextDocument list
+## 11_14_20, 14_49.txt     2      PlainTextDocument list
+## 11_14_20, 14_50.txt     2      PlainTextDocument list
+## 11_16_20, 13_18.txt     2      PlainTextDocument list
+## 11_16_20, 13_21.txt     2      PlainTextDocument list
+## 11_16_20, 17_59.txt     2      PlainTextDocument list
+## 11_16_20, 23_40.txt     2      PlainTextDocument list
+## 11_16_20, 23_53 (1).txt 2      PlainTextDocument list
+## 11_16_20, 23_53 (2).txt 2      PlainTextDocument list
+## 11_17_20, 08_56 (1).txt 2      PlainTextDocument list
+## 11_17_20, 08_56.txt     2      PlainTextDocument list
+## 11_17_20, 13_13 (1).txt 2      PlainTextDocument list
+## 11_17_20, 13_15 (3).txt 2      PlainTextDocument list
+## 11_17_20, 18_07.txt     2      PlainTextDocument list
+## 11_18_20, 10_00 (1).txt 2      PlainTextDocument list
+## 11_18_20, 10_01 (1).txt 2      PlainTextDocument list
+## 11_18_20, 19_42.txt     2      PlainTextDocument list
+## 11_19_20, 08_02.txt     2      PlainTextDocument list
+## 11_19_20, 09_47 (2).txt 2      PlainTextDocument list
+## 11_19_20, 10_15.txt     2      PlainTextDocument list
+## 11_19_20, 10_16 (1).txt 2      PlainTextDocument list
+## 11_19_20, 10_20 (1).txt 2      PlainTextDocument list
+## 11_19_20, 10_20.txt     2      PlainTextDocument list
+## 11_19_20, 10_25.txt     2      PlainTextDocument list
+## 11_19_20, 10_28 (1).txt 2      PlainTextDocument list
+## 11_19_20, 10_38 (1).txt 2      PlainTextDocument list
+## 11_19_20, 10_42 (1).txt 2      PlainTextDocument list
+## 11_19_20, 10_57 (1).txt 2      PlainTextDocument list
+## 11_19_20, 10_57.txt     2      PlainTextDocument list
+## 11_19_20, 11_01.txt     2      PlainTextDocument list
+## 11_19_20, 11_05 (1).txt 2      PlainTextDocument list
+## 11_19_20, 17_39 (2).txt 2      PlainTextDocument list
+## 11_19_20, 17_39.txt     2      PlainTextDocument list
+## 11_19_20, 17_40.txt     2      PlainTextDocument list
+## 11_19_20, 17_42.txt     2      PlainTextDocument list
+## 11_19_20, 18_54.txt     2      PlainTextDocument list
+## 11_19_20, 19_14 (1).txt 2      PlainTextDocument list
+## 11_19_20, 19_14 (2).txt 2      PlainTextDocument list
+## 11_19_20, 19_15 (1).txt 2      PlainTextDocument list
+## 11_2_20, 13_50.txt      2      PlainTextDocument list
+## 11_2_20, 13_53.txt      2      PlainTextDocument list
+## 11_2_20, 14_06.txt      2      PlainTextDocument list
+## 11_20_20, 11_30 (1).txt 2      PlainTextDocument list
+## 11_20_20, 11_30.txt     2      PlainTextDocument list
+## 11_20_20, 11_32 (5).txt 2      PlainTextDocument list
+## 11_20_20, 11_32.txt     2      PlainTextDocument list
+## 11_20_20, 11_33.txt     2      PlainTextDocument list
+## 11_24_20, 15_13.txt     2      PlainTextDocument list
+## 11_25_20, 09_07.txt     2      PlainTextDocument list
+## 11_25_20, 11_56.txt     2      PlainTextDocument list
+## 11_25_20, 21_54 (1).txt 2      PlainTextDocument list
+## 11_25_20, 21_54.txt     2      PlainTextDocument list
+## 11_26_20, 12_18.txt     2      PlainTextDocument list
+## 11_26_20, 12_19.txt     2      PlainTextDocument list
+## 11_26_20, 19_09.txt     2      PlainTextDocument list
+## 11_26_20, 19_10 (1).txt 2      PlainTextDocument list
+## 11_26_20, 19_10 (2).txt 2      PlainTextDocument list
+## 11_27_20, 13_42.txt     2      PlainTextDocument list
+## 11_27_20, 17_13.txt     2      PlainTextDocument list
+## 11_27_20, 17_34 (1).txt 2      PlainTextDocument list
+## 11_27_20, 17_34 (2).txt 2      PlainTextDocument list
+## 11_27_20, 17_34 (3).txt 2      PlainTextDocument list
+## 11_27_20, 17_34 (4).txt 2      PlainTextDocument list
+## 11_27_20, 17_35.txt     2      PlainTextDocument list
+## 11_27_20, 17_37 (4).txt 2      PlainTextDocument list
+## 11_27_20, 17_39 (1).txt 2      PlainTextDocument list
+## 11_28_20, 21_22.txt     2      PlainTextDocument list
+## 11_28_20, 21_30.txt     2      PlainTextDocument list
+## 11_28_20, 21_44.txt     2      PlainTextDocument list
+## 11_28_20, 21_48 (1).txt 2      PlainTextDocument list
+## 11_28_20, 21_50.txt     2      PlainTextDocument list
+## 11_28_20, 21_51 (2).txt 2      PlainTextDocument list
+## 11_28_20, 21_51.txt     2      PlainTextDocument list
+## 11_28_20, 21_52.txt     2      PlainTextDocument list
+## 11_28_20, 21_54.txt     2      PlainTextDocument list
+## 11_28_20, 21_56 (1).txt 2      PlainTextDocument list
+## 11_28_20, 21_56 (2).txt 2      PlainTextDocument list
+## 11_28_20, 21_57 (1).txt 2      PlainTextDocument list
+## 11_28_20, 21_57.txt     2      PlainTextDocument list
+## 11_28_20, 22_00.txt     2      PlainTextDocument list
+## 11_3_20, 14_50.txt      2      PlainTextDocument list
+## 11_3_20, 16_41.txt      2      PlainTextDocument list
+## 11_4_20, 13_42 (1).txt  2      PlainTextDocument list
+## 11_4_20, 13_42.txt      2      PlainTextDocument list
+## 11_4_20, 14_15.txt      2      PlainTextDocument list
+## 12_1_20, 16_24.txt      2      PlainTextDocument list
+## 12_1_20, 16_45.txt      2      PlainTextDocument list
+## 12_2_20, 09_16 (1).txt  2      PlainTextDocument list
+## 12_2_20, 10_11.txt      2      PlainTextDocument list
+## 4_30_20, 23_23.txt      2      PlainTextDocument list
+## 9_22_20, 16_04.txt      2      PlainTextDocument list
+## 9_22_20, 16_12.txt      2      PlainTextDocument list
+## 9_29_20, 12_59.txt      2      PlainTextDocument list
+## 9_29_20, 13_10.txt      2      PlainTextDocument list
+## 9_29_20, 13_31.txt      2      PlainTextDocument list
+## 9_29_20, 13_32 (1).txt  2      PlainTextDocument list
+## 9_29_20, 13_32 (2).txt  2      PlainTextDocument list
+## 9_7_20, 11_53.txt       2      PlainTextDocument list</code></pre>
+</div>
+</div>
+<div id="file-metadata" class="section level2 tabset tabset-pills">
+<h2>3.2 File metadata</h2>
+<div id="question-3" class="section level3">
+<h3>Question</h3>
+<p>Try to read the metadata from the first 5 documents in the corpus, and get the full metadata including content of the first document.</p>
+</div>
+<div id="hint-1-3" class="section level3">
+<h3>Hint 1</h3>
+<p>Take a look at what is done in the introduction to <a href="https://canvas.utwente.nl/courses/7148/files/2043452/download?wrap=1"><em>Text mining</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-2-3" class="section level3">
+<h3>Hint 2</h3>
+<p>You can use the ‘inspect()’ function to get the summary of the corpus. You can type <code>?inspect</code> to find out how this function works.</p>
+</div>
+<div id="hint-3-2" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code>## The function inspect() displays detailed information on a corpus (or a
+## term-document matrix, or a text document)
+inspect(acq[1:2]) # information about the first text
+inspect(acq[[1]])  # the first text </code></pre>
+</div>
+<div id="answer-2" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>inspect(corpus_a[1:5])</code></pre>
+<pre><code>## &lt;&lt;VCorpus&gt;&gt;
+## Metadata:  corpus specific: 0, document level (indexed): 0
+## Content:  documents: 5
+## 
+## [[1]]
+## &lt;&lt;PlainTextDocument&gt;&gt;
+## Metadata:  7
+## Content:  chars: 63
+## 
+## [[2]]
+## &lt;&lt;PlainTextDocument&gt;&gt;
+## Metadata:  7
+## Content:  chars: 4
+## 
+## [[3]]
+## &lt;&lt;PlainTextDocument&gt;&gt;
+## Metadata:  7
+## Content:  chars: 58
+## 
+## [[4]]
+## &lt;&lt;PlainTextDocument&gt;&gt;
+## Metadata:  7
+## Content:  chars: 114
+## 
+## [[5]]
+## &lt;&lt;PlainTextDocument&gt;&gt;
+## Metadata:  7
+## Content:  chars: 40</code></pre>
+<pre class="r"><code>inspect(corpus_a[[1]])</code></pre>
+<pre><code>## &lt;&lt;PlainTextDocument&gt;&gt;
+## Metadata:  7
+## Content:  chars: 63
+## 
+## Wednesday the 28th I&#39;m available, so I&#39;m totally okay with that</code></pre>
+</div>
+</div>
+<div id="read-content" class="section level2 tabset tabset-pills">
+<h2>3.3 Read content</h2>
+<div id="question-4" class="section level3">
+<h3>Question</h3>
+<p>Sometimes, you just only want the content, without the metadata. Try to do that for the first file.</p>
+</div>
+<div id="hint-1-4" class="section level3">
+<h3>Hint 1</h3>
+<p>Take a look at what is done in the introduction to <a href="https://canvas.utwente.nl/courses/7148/files/2043452/download?wrap=1"><em>Text mining</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-2-4" class="section level3">
+<h3>Hint 2</h3>
+<p>You can use the ‘writeLines()’ function to get the summary of the corpus. You can type <code>?writeLines</code> to find out how this function works.</p>
+</div>
+<div id="hint-3-3" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code>writeLines(as.character(acq[[1]])) # the plain text only</code></pre>
+</div>
+<div id="answer-3" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>writeLines(as.character(corpus_a[[1]]))</code></pre>
+<pre><code>## Wednesday the 28th I&#39;m available, so I&#39;m totally okay with that</code></pre>
+</div>
+</div>
+<div id="explore-other-corpus" class="section level2 tabset tabset-pills">
+<h2>3.4 Explore other corpus</h2>
+<div id="question-5" class="section level3">
+<h3>Question</h3>
+<p>Now explore the other corpus too in the same way</p>
+</div>
+<div id="hint-1-5" class="section level3">
+<h3>Hint 1</h3>
+<p>Take a look at the code from the previous questions, and modify it for this question</p>
+</div>
+<div id="answer-4" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>summary(corpus_b) #View file list
+inspect(corpus_b[1:5]) #Information about the first few files
+inspect(corpus_b[[1]]) #The first text
+writeLines(as.character(corpus_b[[1]])) #The plain text only</code></pre>
+</div>
+</div>
+</div>
+<div id="clean-dataset" class="section level1">
+<h1>4. Clean dataset</h1>
+<p>Before we can analyze the data, we need to clean it, so it can be analyzed easily. First we are gonna clean the first dataset, and then at the end we can clean the other one too</p>
+<div id="stemming-words" class="section level2 tabset tabset-pills">
+<h2>4.1 Stemming words</h2>
+<div id="question-6" class="section level3">
+<h3>Question</h3>
+<p>You want to make sure that different forms of the same word (e.g. walk, walking, walked, walks) get recognized as the same word. Therefore, you can <strong>stem</strong> the words in the documents in your corpus. This will bring every word back to it’s stem. So walking, walked and walks all become walk. Try to perform this stemming on all documents in the first corpus. Check if you did it correctly by printing the first document.</p>
+</div>
+<div id="hint-1-6" class="section level3">
+<h3>Hint 1</h3>
+<p>If you want to perform a content transformation on all documents in a corpus, you can use the <code>tm_map()</code> function. Try to find out how this function works using <code>?tm_map</code>.</p>
+</div>
+<div id="hint-2-5" class="section level3">
+<h3>Hint 2</h3>
+<p>You can check if the stemming went correctly by looking at the first document. You can do that the same way as you did in 3.3, by using the following code:</p>
+<pre class="r"><code>writeLines(as.character(corpus_a[[1]]))</code></pre>
+</div>
+<div id="hint-3-4" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at what is done in the introduction to <a href="https://canvas.utwente.nl/courses/7148/files/2043452/download?wrap=1"><em>Text mining</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-4-1" class="section level3">
+<h3>Hint 4</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code>## 2. Stem words in a text document using Porter&#39;s stemming algorithm
+acq &lt;- acq %&gt;% 
+  tm_map(stemDocument)</code></pre>
+</div>
+<div id="answer-5" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>corpus_a &lt;- corpus_a %&gt;%
+  tm_map(stemDocument)
+
+# Check first document
+writeLines(as.character(corpus_a[[1]]))</code></pre>
+<pre><code>## Wednesday the 28th I&#39;m available, so I&#39;m total okay with that</code></pre>
+</div>
+</div>
+<div id="remove-punctuation" class="section level2 tabset tabset-pills">
+<h2>4.2 Remove punctuation</h2>
+<div id="question-7" class="section level3">
+<h3>Question</h3>
+<p>When analyzing, you don’t want the punctuation to influence the analysis. For example, you want <code>"Yay!"</code> and <code>"Yay."</code> to be seen as the same word. Therefore, you can remove all the punctuation from the documents. Try to do this on all documents in the first corpus. Check if you did it correctly by printing the first document.</p>
+</div>
+<div id="hint-1-7" class="section level3">
+<h3>Hint 1</h3>
+<p>Look at what you did in the previous question, and try to modify that code to remove the punctuation, instead of stemming the document.</p>
+</div>
+<div id="hint-2-6" class="section level3">
+<h3>Hint 2</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code>## 3. Remove punctuation from the text
+acq &lt;- acq %&gt;% 
+  tm_map(removePunctuation)</code></pre>
+</div>
+<div id="answer-6" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>corpus_a &lt;- corpus_a %&gt;%
+  tm_map(removePunctuation)
+
+# Check first document
+writeLines(as.character(corpus_a[[1]]))</code></pre>
+<pre><code>## Wednesday the 28th Im available so Im total okay with that</code></pre>
+</div>
+</div>
+<div id="remove-numbers" class="section level2 tabset tabset-pills">
+<h2>4.3 Remove numbers</h2>
+<div id="question-8" class="section level3">
+<h3>Question</h3>
+<p>Numbers can also influence your results. Therefore, you can also remove all numbers from the documents. Try to do this on all documents in the first corpus. Check if you did it correctly by printing the first document.</p>
+</div>
+<div id="hint-1-8" class="section level3">
+<h3>Hint 1</h3>
+<p>Look at what you did in the previous question, and try to modify that code to remove the punctuation, instead of stemming the document.</p>
+</div>
+<div id="hint-2-7" class="section level3">
+<h3>Hint 2</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code>## 4. Remove numbers from the text
+acq &lt;- acq %&gt;% 
+  tm_map(removeNumbers)</code></pre>
+</div>
+<div id="answer-7" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>corpus_a &lt;- corpus_a %&gt;%
+  tm_map(removeNumbers)
+
+# Check first document
+writeLines(as.character(corpus_a[[1]]))</code></pre>
+<pre><code>## Wednesday the th Im available so Im total okay with that</code></pre>
+</div>
+</div>
+<div id="change-to-lowercase" class="section level2 tabset tabset-pills">
+<h2>4.4 Change to lowercase</h2>
+<div id="question-9" class="section level3">
+<h3>Question</h3>
+<p>Capital letters can also screw up your analysis. For example, you don’t want <code>"Hello"</code> and <code>"hello"</code> to be seen as different words. Therfore, you can change the full text to lowercase. Try to do this on all documents in the first corpus. Check if you did it correctly by printing the first document.</p>
+</div>
+<div id="hint-1-9" class="section level3">
+<h3>Hint 1</h3>
+<p>Look at what you did in the previous questions, and try to modify that code to remove the punctuation, instead of stemming the document.</p>
+</div>
+<div id="hint-2-8" class="section level3">
+<h3>Hint 2</h3>
+<p>The function <code>tolower()</code> can be used on strings to change them to lowercase. However, this function can not be used directly on the documents in your corpus. Therefore you can use the <code>content_transformer()</code> function to modify normal functions so they can be used on the documents on your corpus.</p>
+</div>
+<div id="hint-3-5" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code>## 1. translate upper case to lower case letters
+acq &lt;- acq %&gt;% 
+  tm_map(content_transformer(tolower))</code></pre>
+</div>
+<div id="answer-8" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>corpus_a &lt;- corpus_a %&gt;%
+  tm_map(content_transformer(tolower))
+
+# Check first document
+writeLines(as.character(corpus_a[[1]]))</code></pre>
+<pre><code>## wednesday the th im available so im total okay with that</code></pre>
+</div>
+</div>
+<div id="remove-stopwords" class="section level2 tabset tabset-pills">
+<h2>4.5 Remove stopwords</h2>
+<div id="question-10" class="section level3">
+<h3>Question</h3>
+<p>Certain words are used very often in language, but don’t actually tell you anything about the content of the text, like <strong>the</strong> or <strong>a</strong>. We call these words <strong>stopwords</strong>. These words aren’t interesting for your analysis and therfore you can remove them. Try to do this on all documents in the first corpus. Check if you did it correctly by printing the first document.</p>
+</div>
+<div id="hint-1-10" class="section level3">
+<h3>Hint 1</h3>
+<p>Look at what you did in the previous questions, and try to modify that code to remove the punctuation, instead of stemming the document.</p>
+</div>
+<div id="hint-2-9" class="section level3">
+<h3>Hint 2</h3>
+<p>To get a list of all stopwords in English, you can use the command below. Then you can use this list to remove these words in all documents.</p>
+<pre class="r"><code>stopwords(&quot;english&quot;)</code></pre>
+<pre><code>##   [1] &quot;i&quot;          &quot;me&quot;         &quot;my&quot;         &quot;myself&quot;     &quot;we&quot;        
+##   [6] &quot;our&quot;        &quot;ours&quot;       &quot;ourselves&quot;  &quot;you&quot;        &quot;your&quot;      
+##  [11] &quot;yours&quot;      &quot;yourself&quot;   &quot;yourselves&quot; &quot;he&quot;         &quot;him&quot;       
+##  [16] &quot;his&quot;        &quot;himself&quot;    &quot;she&quot;        &quot;her&quot;        &quot;hers&quot;      
+##  [21] &quot;herself&quot;    &quot;it&quot;         &quot;its&quot;        &quot;itself&quot;     &quot;they&quot;      
+##  [26] &quot;them&quot;       &quot;their&quot;      &quot;theirs&quot;     &quot;themselves&quot; &quot;what&quot;      
+##  [31] &quot;which&quot;      &quot;who&quot;        &quot;whom&quot;       &quot;this&quot;       &quot;that&quot;      
+##  [36] &quot;these&quot;      &quot;those&quot;      &quot;am&quot;         &quot;is&quot;         &quot;are&quot;       
+##  [41] &quot;was&quot;        &quot;were&quot;       &quot;be&quot;         &quot;been&quot;       &quot;being&quot;     
+##  [46] &quot;have&quot;       &quot;has&quot;        &quot;had&quot;        &quot;having&quot;     &quot;do&quot;        
+##  [51] &quot;does&quot;       &quot;did&quot;        &quot;doing&quot;      &quot;would&quot;      &quot;should&quot;    
+##  [56] &quot;could&quot;      &quot;ought&quot;      &quot;i&#39;m&quot;        &quot;you&#39;re&quot;     &quot;he&#39;s&quot;      
+##  [61] &quot;she&#39;s&quot;      &quot;it&#39;s&quot;       &quot;we&#39;re&quot;      &quot;they&#39;re&quot;    &quot;i&#39;ve&quot;      
+##  [66] &quot;you&#39;ve&quot;     &quot;we&#39;ve&quot;      &quot;they&#39;ve&quot;    &quot;i&#39;d&quot;        &quot;you&#39;d&quot;     
+##  [71] &quot;he&#39;d&quot;       &quot;she&#39;d&quot;      &quot;we&#39;d&quot;       &quot;they&#39;d&quot;     &quot;i&#39;ll&quot;      
+##  [76] &quot;you&#39;ll&quot;     &quot;he&#39;ll&quot;      &quot;she&#39;ll&quot;     &quot;we&#39;ll&quot;      &quot;they&#39;ll&quot;   
+##  [81] &quot;isn&#39;t&quot;      &quot;aren&#39;t&quot;     &quot;wasn&#39;t&quot;     &quot;weren&#39;t&quot;    &quot;hasn&#39;t&quot;    
+##  [86] &quot;haven&#39;t&quot;    &quot;hadn&#39;t&quot;     &quot;doesn&#39;t&quot;    &quot;don&#39;t&quot;      &quot;didn&#39;t&quot;    
+##  [91] &quot;won&#39;t&quot;      &quot;wouldn&#39;t&quot;   &quot;shan&#39;t&quot;     &quot;shouldn&#39;t&quot;  &quot;can&#39;t&quot;     
+##  [96] &quot;cannot&quot;     &quot;couldn&#39;t&quot;   &quot;mustn&#39;t&quot;    &quot;let&#39;s&quot;      &quot;that&#39;s&quot;    
+## [101] &quot;who&#39;s&quot;      &quot;what&#39;s&quot;     &quot;here&#39;s&quot;     &quot;there&#39;s&quot;    &quot;when&#39;s&quot;    
+## [106] &quot;where&#39;s&quot;    &quot;why&#39;s&quot;      &quot;how&#39;s&quot;      &quot;a&quot;          &quot;an&quot;        
+## [111] &quot;the&quot;        &quot;and&quot;        &quot;but&quot;        &quot;if&quot;         &quot;or&quot;        
+## [116] &quot;because&quot;    &quot;as&quot;         &quot;until&quot;      &quot;while&quot;      &quot;of&quot;        
+## [121] &quot;at&quot;         &quot;by&quot;         &quot;for&quot;        &quot;with&quot;       &quot;about&quot;     
+## [126] &quot;against&quot;    &quot;between&quot;    &quot;into&quot;       &quot;through&quot;    &quot;during&quot;    
+## [131] &quot;before&quot;     &quot;after&quot;      &quot;above&quot;      &quot;below&quot;      &quot;to&quot;        
+## [136] &quot;from&quot;       &quot;up&quot;         &quot;down&quot;       &quot;in&quot;         &quot;out&quot;       
+## [141] &quot;on&quot;         &quot;off&quot;        &quot;over&quot;       &quot;under&quot;      &quot;again&quot;     
+## [146] &quot;further&quot;    &quot;then&quot;       &quot;once&quot;       &quot;here&quot;       &quot;there&quot;     
+## [151] &quot;when&quot;       &quot;where&quot;      &quot;why&quot;        &quot;how&quot;        &quot;all&quot;       
+## [156] &quot;any&quot;        &quot;both&quot;       &quot;each&quot;       &quot;few&quot;        &quot;more&quot;      
+## [161] &quot;most&quot;       &quot;other&quot;      &quot;some&quot;       &quot;such&quot;       &quot;no&quot;        
+## [166] &quot;nor&quot;        &quot;not&quot;        &quot;only&quot;       &quot;own&quot;        &quot;same&quot;      
+## [171] &quot;so&quot;         &quot;than&quot;       &quot;too&quot;        &quot;very&quot;</code></pre>
+</div>
+<div id="hint-3-6" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code>## remove all words from the list stopwords(&quot;english&quot;)
+acq &lt;- acq %&gt;% 
+  tm_map(removeWords, stopwords(&quot;english&quot;))</code></pre>
+</div>
+<div id="answer-9" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>corpus_a &lt;- corpus_a %&gt;%
+  tm_map(removeWords, stopwords(&quot;english&quot;))
+
+# Check first document
+writeLines(as.character(corpus_a[[1]]))</code></pre>
+<pre><code>## wednesday  th im available  im total okay</code></pre>
+</div>
+</div>
+<div id="remove-additional-whitespace" class="section level2 tabset tabset-pills">
+<h2>4.6 Remove additional whitespace</h2>
+<div id="question-11" class="section level3">
+<h3>Question</h3>
+<p>Because of all the words we’ve removed, we might now have multiple spaces after each other, because the words in between them have disappeared. Try to change all these double spaces to just one space. Try to do this on all documents in the first corpus. Check if you did it correctly by printing the first document.</p>
+</div>
+<div id="hint-1-11" class="section level3">
+<h3>Hint 1</h3>
+<p>Look at what you did in the previous questions, and try to modify that code to remove the punctuation, instead of stemming the document.</p>
+</div>
+<div id="hint-2-10" class="section level3">
+<h3>Hint 2</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-3-7" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code>## 6. Remove too many spaces
+corpus &lt;- corpus %&gt;% 
+  tm_map(stripWhitespace)</code></pre>
+</div>
+<div id="answer-10" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>corpus_a &lt;- corpus_a %&gt;%
+  tm_map(stripWhitespace)
+
+# Check first document
+writeLines(as.character(corpus_a[[1]]))</code></pre>
+<pre><code>## wednesday th im available im total okay</code></pre>
+</div>
+</div>
+<div id="remove-special-characters" class="section level2 tabset tabset-pills">
+<h2>4.7 Remove special characters</h2>
+<div id="question-12" class="section level3">
+<h3>Question</h3>
+<p>Lastly, there are some special characters that can screw up your analysis too. You can also remove those. Try to do this on all documents in the first corpus. Check if you did it correctly by printing the first document.</p>
+</div>
+<div id="hint-1-12" class="section level3">
+<h3>Hint 1</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-2-11" class="section level3">
+<h3>Hint 2</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code>## 6. Remove too many spaces
+corpus &lt;- corpus %&gt;% 
+  tm_map(stripWhitespace)</code></pre>
+</div>
+<div id="answer-11" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>corpus_a &lt;- corpus_a %&gt;%
+  tm_map(content_transformer(iconv), from = &quot;latin1&quot;, to = &quot;ASCII&quot;, sub = &quot;&quot; )
+
+# Check first document
+writeLines(as.character(corpus_a[[1]]))</code></pre>
+<pre><code>## wednesday th im available im total okay</code></pre>
+</div>
+</div>
+<div id="clean-other-dataset" class="section level2 tabset tabset-pills">
+<h2>4.8 Clean other dataset</h2>
+<div id="question-13" class="section level3">
+<h3>Question</h3>
+<p>Now that you’ve cleaned the first dataset, you also need to clean the second dataset. Try to do that using the commands you also used on the first dataset. You can try to do all commands at once using the pipe-operator (<code>%&gt;%</code>). Check if everything went correctly by looking at the fist document.</p>
+</div>
+<div id="hint-1-13" class="section level3">
+<h3>Hint 1</h3>
+<p>The pipe-operator (<code>%&gt;%</code>) can string multiple commands together. For example, if I want to stem the document and remove the punctuation at once, i can do:</p>
+<pre class="r"><code>corpus_b &lt;- corpus_b %&gt;%
+  tm_map(stemDocument) %&gt;%
+  tm_map(removePunctuation)</code></pre>
+</div>
+<div id="answer-12" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>corpus_b &lt;- corpus_b %&gt;%
+  tm_map(stemDocument) %&gt;% #Stemming words
+  tm_map(removePunctuation) %&gt;% #Remove punctuation
+  tm_map(removeNumbers) %&gt;% #Remove numbers
+  tm_map(content_transformer(tolower)) %&gt;% #Change to lowercase
+  tm_map(removeWords, stopwords(&quot;English&quot;)) %&gt;% #Remove stopwords
+  tm_map(content_transformer(iconv), from = &quot;latin1&quot;, to = &quot;ASCII&quot;, sub = &quot;&quot; ) %&gt;% #Remove special characters
+  tm_map(stripWhitespace) #Remove additional whitespace
+
+# Check first document
+writeLines(as.character(corpus_b[[1]]))</code></pre>
+<pre><code>## hey wouter</code></pre>
+</div>
+</div>
+</div>
+<div id="find-word-frequencies" class="section level1">
+<h1>5. Find word frequencies</h1>
+<p>Now we want to find out how often each word occurs in each corpus so we can make a nice overview of that and compare them.</p>
+<div id="create-document-term-matrix" class="section level2 tabset tabset-pills">
+<h2>5.1 Create Document Term Matrix</h2>
+<div id="question-14" class="section level3">
+<h3>Question</h3>
+<p>Our fist step is converting our corpus to a <em>Document Term Matrix</em>. This matrix contains all the documents in the rows and all possible words in the collumns. Then in each cell, it has the number of times that word occurs in that document. Try to do make such a matrix for the first corpus.</p>
+</div>
+<div id="hint-1-14" class="section level3">
+<h3>Hint 1</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2043466">tutorial about <em>Text mining introduction</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-2-12" class="section level3">
+<h3>Hint 2</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code># get document term matrices
+fake_dtm &lt;- DocumentTermMatrix(fake_corpus)
+real_dtm &lt;- DocumentTermMatrix(real_corpus)</code></pre>
+</div>
+<div id="answer-13" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>dtm_a &lt;- DocumentTermMatrix(corpus_a)</code></pre>
+</div>
+</div>
+<div id="count-total-amount-of-words" class="section level2 tabset tabset-pills">
+<h2>5.2 Count total amount of words</h2>
+<div id="question-15" class="section level3">
+<h3>Question</h3>
+<p>To get the total frequencies from this <em>Document Term Matrix</em> all we need to do is take the sum for every column, since every row contains the amount of times the word occurs in that document. However, we cant perform this action immediately on a <em>Document Term Matrix</em>, so we need to convert it to a normal <em>matrix</em> first.</p>
+</div>
+<div id="hint-1-15" class="section level3">
+<h3>Hint 1</h3>
+<p>To convert a DTM to a normal matrix you can use the <code>as.matrix()</code> function. You can use <code>?as.matrix</code> to find out how it works.</p>
+</div>
+<div id="hint-2-13" class="section level3">
+<h3>Hint 2</h3>
+<p>To get the sum of every column in a matrix you can use the <code>colSums()</code> function. You can use <code>?colSums</code> to find out how it works.</p>
+</div>
+<div id="hint-3-8" class="section level3">
+<h3>Hint 3</h3>
+<p>The pipe-operator (<code>%&gt;%</code>) can string multiple commands together. That way you can string both functions together</p>
+</div>
+<div id="hint-4-2" class="section level3">
+<h3>Hint 4</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2043466">tutorial about <em>Text mining introduction</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-5-1" class="section level3">
+<h3>Hint 5</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code># get frequencies
+fake_freqs &lt;- fake_dtm %&gt;% 
+  as.matrix() %&gt;% 
+  colSums()
+
+real_freqs &lt;- real_dtm %&gt;% 
+  as.matrix() %&gt;% 
+  colSums()</code></pre>
+</div>
+<div id="answer-14" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>freqs_a &lt;- dtm_a %&gt;% 
+  as.matrix() %&gt;% 
+  colSums()</code></pre>
+</div>
+</div>
+<div id="sort-by-frequency" class="section level2 tabset tabset-pills">
+<h2>5.3 Sort by frequency</h2>
+<div id="question-16" class="section level3">
+<h3>Question</h3>
+<p>Because we would like to know which words are most frequent, we want to sort this by frequency. We want the most frequent words first, so we want to sort it in decreasing order.</p>
+</div>
+<div id="hint-1-16" class="section level3">
+<h3>Hint 1</h3>
+<p>To sort we can use the <code>sort()</code> function. Use <code>?sort</code> to find out how this function works, and look at the arguments to see if you can change the order form increasing to decreasing.</p>
+</div>
+<div id="hint-2-14" class="section level3">
+<h3>Hint 2</h3>
+<p>Take a look at what is done in the introduction to <a href="https://canvas.utwente.nl/courses/7148/files/2043452/download?wrap=1"><em>Text mining</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-3-9" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code># order, from high to low
+freqs &lt;- freqs %&gt;% 
+  sort(decreasing = TRUE)</code></pre>
+</div>
+<div id="answer-15" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>freqs_a &lt;- freqs_a %&gt;% 
+  sort(decreasing = TRUE)</code></pre>
+</div>
+</div>
+<div id="create-frequency-table" class="section level2 tabset tabset-pills">
+<h2>5.4 Create frequency table</h2>
+<div id="question-17" class="section level3">
+<h3>Question</h3>
+<p>Now you can try to transform this into a frequency table. In the first column of the table, you want to put the words. These are the column names from your matrix. In the second column you want to put the frequencies.</p>
+</div>
+<div id="hint-1-17" class="section level3">
+<h3>Hint 1</h3>
+<p>To create such a table, you can use the <code>tibble()</code> function. In this function you can define for each column of the table which values you want to put in. So if you have a variable <code>a</code> and <code>b</code>, and <code>a</code> contains the words and <code>b</code> contains the frequencies, you can do:</p>
+<pre class="r"><code>wf &lt;- tibble(
+  word = a,
+  freqs = b
+)</code></pre>
+<p>You can use <code>?tibble</code> to learn more about this function</p>
+</div>
+<div id="hint-2-15" class="section level3">
+<h3>Hint 2</h3>
+<p>To get the names of the columns from the matrix you can use the <code>names()</code> function. You can use <code>?names</code> to find out how it works. To make sure the order stays sorted in your frequency table, you might need to convert this list of names to a ordered factor. You can do that using the <code>factor()</code> function. You can use <code>?factor</code> to find out how this function works.</p>
+</div>
+<div id="hint-3-10" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at what is done in the introduction to <a href="https://canvas.utwente.nl/courses/7148/files/2043452/download?wrap=1"><em>Text mining</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-4-3" class="section level3">
+<h3>Hint 4</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code>## First we make a data frame with the words themselves in one column, and their 
+## frequencies in another column.
+wf &lt;- tibble(word = factor(names(freqs), names(freqs), ordered = TRUE), 
+             freqs = freqs)</code></pre>
+</div>
+<div id="answer-16" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>wf_a &lt;- tibble(word = factor(names(freqs_a), names(freqs_a), ordered = TRUE), 
+             freqs = freqs_a)</code></pre>
+</div>
+</div>
+<div id="other-dataset" class="section level2 tabset tabset-pills">
+<h2>5.5 Other dataset</h2>
+<div id="question-18" class="section level3">
+<h3>Question</h3>
+<p>Now that you’ve determined the frequencies of the first dataset, you also need to do that for the second dataset. Try to do that using the commands you also used on the first dataset. You can try to do all commands at once using the pipe-operator (<code>%&gt;%</code>). Check if everything went correctly by looking at the fist document.</p>
+</div>
+<div id="hint-1-18" class="section level3">
+<h3>Hint 1</h3>
+<p>The pipe-operator (<code>%&gt;%</code>) can string multiple commands together. For example, if I want to convert my corpus to a <em>Document Term Matrix</em> and convert that to a normal <em>matrix</em> at once, i can do:</p>
+<pre class="r"><code>wf_b &lt;- corpus_b %&gt;%
+  DocumentTermMatrix()
+  as.matrix()</code></pre>
+</div>
+<div id="answer-17" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>wf_b &lt;- corpus_b %&gt;%
+  DocumentTermMatrix() %&gt;% #Create Document Term Matrix
+  as.matrix() %&gt;% 
+  colSums() %&gt;% #Count total amount of words
+  sort(decreasing = TRUE) %&gt;% #Sort by frequency
+  tibble(word = factor(names(.), names(.), ordered = TRUE), freqs = .) #Create frequency table</code></pre>
+</div>
+</div>
+</div>
+<div id="visualize" class="section level1">
+<h1>6. Visualize</h1>
+<p>Now that you’ve determined how often each word occurs, you can try to visualize it. First, we’re gonna visualize the first corpus, and after that we try to do the same with the second one.</p>
+<div id="create-bar-chart" class="section level2 tabset tabset-pills">
+<h2>6.1 Create bar chart</h2>
+<div id="question-19" class="section level3">
+<h3>Question</h3>
+<p>One way to visualize these frequencies is with a bar chart. You can do that using <code>ggplot()</code>. Try to create a bar-chart of the 20 most frequent words in the dataset, with the words on the y-axis, so they are easily readable.</p>
+</div>
+<div id="hint-1-19" class="section level3">
+<h3>Hint 1</h3>
+<p>To make plots with <code>ggplot</code> you always need at least two functions. The first function you need is <code>ggplot()</code>. This is required for every plot you make. This function basically creates the axis for the plot. As an argument for this function you need to put in an aestetics map (<code>aes()</code>). With this map, you tell R which visual elements represent which data. You can link variables, for example, to the <code>x</code>, <code>y</code>, <code>color</code> and <code>fill</code> of your graph.</p>
+<p>Now that you created the background with <code>ggplot()</code> you can add layers to it with the actual graphs using the <code>+</code> sign. For example, you can use <code>geom_point()</code> for a scatterplot, <code>geom_line()</code> for a line, <code>geom_smooth()</code> for a regression line, or <code>geom_col()</code> for a bar chart.</p>
+</div>
+<div id="hint-2-16" class="section level3">
+<h3>Hint 2</h3>
+<p>So imagine you have a dataset called <code>data</code> with 3 variables. The gender, a grade for module 1 and a grade for module 2.</p>
+<pre class="r"><code>data &lt;- data.frame(
+  gender = c(&quot;Male&quot;,&quot;Male&quot;,&quot;Female&quot;,&quot;Male&quot;,&quot;Male&quot;,&quot;Female&quot;,&quot;Female&quot;,&quot;Female&quot;,&quot;Female&quot;,&quot;Male&quot;),
+  grade_m1 = c(4.5,9.0,2.0,3.0,6.7,7.7,8.3,2.2,4.4,9.9),
+  grade_m2 = c(3.3,7.6,2.2,5.5,4.3,6.6,9.4,1.3,5.6,8.3)
+)</code></pre>
+<p>If you want to make a scatterplot with the grade of module 1 on the x-asis, and the grade of module 2 on the y-axis, and different colors for each gender, I would use the following code:</p>
+<pre class="r"><code>data %&gt;%
+  ggplot(aes(x = grade_m1, y = grade_m2, color = gender)) +
+  geom_point()</code></pre>
+<p><img src="whatsapp_files/figure-html/unnamed-chunk-45-1.png" width="672" /></p>
+</div>
+<div id="hint-3-11" class="section level3">
+<h3>Hint 3</h3>
+<p>To get only the first few rows of your dataset, you can use the <code>top_n()</code> function. You can use <code>?top_n</code> to find out how this function works.</p>
+</div>
+<div id="hint-4-4" class="section level3">
+<h3>Hint 4</h3>
+<p>Take a look at what is done in the introduction to <a href="https://canvas.utwente.nl/courses/7148/files/2043452/download?wrap=1"><em>Text mining</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-5-2" class="section level3">
+<h3>Hint 5</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code># create a rotated bar plot
+wf %&gt;% 
+  top_n(20) %&gt;%     # select only the 20 most frequent words
+  ggplot(aes(x = word, y = freqs)) + 
+  geom_col() +
+  coord_flip()  # rotate the axes so we can read the labels better</code></pre>
+</div>
+<div id="answer-18" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>wf_a %&gt;% 
+  top_n(20) %&gt;%
+  ggplot(aes(x = word, y = freqs)) + 
+  geom_col() +
+  coord_flip()</code></pre>
+<pre><code>## Selecting by freqs</code></pre>
+<p><img src="whatsapp_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
+<p>Instead of flipping the axes using <code>coord_flip()</code>, you can also just switch the x and the y variable. This will give the same results</p>
+<pre class="r"><code>wf_a %&gt;% 
+  top_n(20) %&gt;%
+  ggplot(aes(x = freqs, y = word)) + 
+  geom_col()</code></pre>
+</div>
+</div>
+<div id="create-a-wordcloud" class="section level2 tabset tabset-pills">
+<h2>6.2 Create a wordcloud</h2>
+<div id="question-20" class="section level3">
+<h3>Question</h3>
+<p>Another way to visualize it, is using a wordcloud. Try to create a wordcloud with the 50 most used words in the corpus.</p>
+</div>
+<div id="hint-1-20" class="section level3">
+<h3>Hint 1</h3>
+<p>You can create a wordcloud using the <code>wordcloud()</code> function in R. Try to find out how this function works using <code>?wordcloud</code>. Also look at the arguments, to see if you can use them to limit it to just 50 words.</p>
+</div>
+<div id="hint-2-17" class="section level3">
+<h3>Hint 2</h3>
+<p>Take a look at what is done in the introduction to <a href="https://canvas.utwente.nl/courses/7148/files/2043452/download?wrap=1"><em>Text mining</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-3-12" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code>## Make a wordcloud
+library(wordcloud)
+set.seed(142)
+
+wordcloud(wf$word, wf$freqs)
+
+wordcloud(wf$word, wf$freqs, min.freq = 25)
+wordcloud(wf$word, wf$freqs, max.words = 50)
+wordcloud(wf$word, wf$freqs, 
+          min.freq = 20, 
+          scale = c(5, .1), 
+          colors = brewer.pal(6, &quot;Dark2&quot;))</code></pre>
+</div>
+<div id="answer-19" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>wordcloud(wf_a$word, wf_a$freqs, max.words = 50)</code></pre>
+<p><img src="whatsapp_files/figure-html/unnamed-chunk-50-1.png" width="672" /></p>
+</div>
+</div>
+<div id="visualize-other-dataset" class="section level2 tabset tabset-pills">
+<h2>6.3 Visualize other dataset</h2>
+<div id="question-21" class="section level3">
+<h3>Question</h3>
+<p>Now that we’ve visualized the first corpus, we also want to do that for the other one, so we can compare them. You can try to add some colors to it too, to make them look nicer.</p>
+</div>
+<div id="hint-1-21" class="section level3">
+<h3>Hint 1</h3>
+<p>If you don’t know how to change the color, try googling <a href="https://www.google.com/search?q=R%20change%20color%20of%20ggplot%20bar%20chart"><em>R change color of ggplot bar chart</em></a><br />
+or <a href="https://www.google.com/search?q=R%20wordcloud%20change%20color"><em>R wordcloud change color</em></a></p>
+</div>
+<div id="hint-2-18" class="section level3">
+<h3>Hint 2</h3>
+<p>You can change for each aestatic how it looks, by adding extra parameters to the <code>geom_col()</code> function, for example <code>fill</code> or <code>color</code>.</p>
+</div>
+<div id="hint-3-13" class="section level3">
+<h3>Hint 3</h3>
+<p>To get a list of rainbow colors, you can use the <code>rainbow()</code> function. As an argument for that function, you can specify the amount of colors you want</p>
+</div>
+<div id="answer-20" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code># Create bar chart
+wf_b %&gt;% 
+  top_n(20) %&gt;%
+  ggplot(aes(x = freqs, y = word)) + 
+  geom_col(fill = &quot;blue&quot;)</code></pre>
+<pre><code>## Selecting by freqs</code></pre>
+<p><img src="whatsapp_files/figure-html/unnamed-chunk-51-1.png" width="672" /></p>
+<pre class="r"><code># Create wordcloud
+wordcloud(wf_b$word, wf_b$freqs, max.words = 50, color = rainbow(50))</code></pre>
+<p><img src="whatsapp_files/figure-html/unnamed-chunk-51-2.png" width="672" /></p>
+</div>
+</div>
+</div>
+<div id="combine-datasets" class="section level1">
+<h1>7. Combine datasets</h1>
+<p>We’ve seen in the visualizations that the word use of different people can be quite different. Using this information, we can try to predict based on the content of a message who has sent it. To do this, we first need to put both corpuses into one, and add extra information to it so R knows who has sent each message.</p>
+<div id="merge-corpora" class="section level2 tabset tabset-pills">
+<h2>7.1 Merge corpora</h2>
+<div id="question-22" class="section level3">
+<h3>Question</h3>
+<p>Try to put both corpora into one corpus.</p>
+</div>
+<div id="hint-1-22" class="section level3">
+<h3>Hint 1</h3>
+<p>You can combine the corpora by putting them together in a list. You can create a list using the <code>c()</code> function. Try to find out how that function works using <code>?c</code></p>
+</div>
+<div id="hint-2-19" class="section level3">
+<h3>Hint 2</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-3-14" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code># combine the two corpora into one corpus
+corpus &lt;- c(corpus_fake, corpus_real)</code></pre>
+</div>
+<div id="answer-21" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>corpus &lt;- c(corpus_a, corpus_b)</code></pre>
+</div>
+</div>
+<div id="count-files" class="section level2 tabset tabset-pills">
+<h2>7.2 Count files</h2>
+<div id="question-23" class="section level3">
+<h3>Question</h3>
+<p>Now the corpuses are combined, but R doesn’t know which document comes from which corpus anymore. Luckily, the documents are still in the same order, so first all documents from <code>corpus_a</code> and then all documents from <code>corpus_b</code>, so if we just count the amount of documents in each corpus, we can assign the first documents one piece of information, while assigning the documents after another piece of info. Try to find out how many documents are in each copus and save the result in a variable.</p>
+</div>
+<div id="hint-1-23" class="section level3">
+<h3>Hint 1</h3>
+<p>To count the documents in a corpus, you can use the <code>length()</code> function. You can use <code>?length</code> to find out how this function works.</p>
+</div>
+<div id="hint-2-20" class="section level3">
+<h3>Hint 2</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-3-15" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code>n_real &lt;- length(corpus_real) # number of real news articles
+n_fake &lt;- length(corpus_fake) # number of fake news articles</code></pre>
+</div>
+<div id="answer-22" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>n_a &lt;- length(corpus_a)
+n_a</code></pre>
+<pre><code>## [1] 119</code></pre>
+<pre class="r"><code>n_b &lt;- length(corpus_b)
+n_b</code></pre>
+<pre><code>## [1] 178</code></pre>
+</div>
+</div>
+<div id="add-metadata" class="section level2 tabset tabset-pills">
+<h2>7.3 Add metadata</h2>
+<div id="question-24" class="section level3">
+<h3>Question</h3>
+<p>Now that we know how many documents we have of each, we can assign this information to each document. We will give that document <em>metadata</em>, which states if the document is written by you (<code>TRUE</code>) or not (<code>FALSE</code>). Call that piece of metadata <code>is_me</code>.</p>
+</div>
+<div id="hint-1-24" class="section level3">
+<h3>Hint 1</h3>
+<p>You can use the <code>meta()</code> function to read a certain piece of metadata. For example, if I would want to read the metadata <code>is_me</code> for each document, I would type</p>
+<pre class="r"><code>meta(corpus, &quot;is_me&quot;)</code></pre>
+<p>This will give you a list with for each document the value of that piece of metadata. You can also assign it such a list to assign each document metadata. This list would need to contain one value for each document. If I would have 10 documents of which the first 5 were written by me, that could look like this for example:</p>
+<pre class="r"><code>meta(corpus, &quot;is_me&quot;) &lt;- c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE)</code></pre>
+<p>You can type <code>?meta</code> to find out more.</p>
+</div>
+<div id="hint-2-21" class="section level3">
+<h3>Hint 2</h3>
+<p>To repeat a certain value a certain amount of times, you can use the <code>rep()</code> function. So if I want a list with first 5 times <code>TRUE</code> and then 5 times <code>FALSE</code>, i could do:</p>
+<pre class="r"><code>meta(corpus, &quot;is_me&quot;) &lt;- c(rep(TRUE,5), rep(FALSE,5))</code></pre>
+<p>You can type <code>?rep</code> to find out more.</p>
+</div>
+<div id="hint-3-16" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-4-5" class="section level3">
+<h3>Hint 4</h3>
+<p>Take a look at this code from that tutorial, and try to modify it for your own code</p>
+<pre class="r"><code># label each document with the &#39;truth&#39; (fake or real news)
+# when a news article is FAKE, we say FAKE = TRUE, otherwise FALSE
+meta(corpus, &quot;fake&quot;) &lt;- c(rep(TRUE, n_fake), 
+                          rep(FALSE, n_real))</code></pre>
+</div>
+<div id="answer-23" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>meta(corpus, &quot;is_me&quot;) &lt;- c(rep(TRUE, n_a), 
+                           rep(FALSE, n_b))</code></pre>
+</div>
+</div>
+</div>
+<div id="create-a-classifier" class="section level1">
+<h1>8. Create a classifier</h1>
+<p>Now that we have the full corpus, we can create a classifier.</p>
+<div id="create-a-document-term-matrix" class="section level2 tabset tabset-pills">
+<h2>8.1 Create a Document Term Matrix</h2>
+<div id="question-25" class="section level3">
+<h3>Question</h3>
+<p>To do this, we fist need to create a <em>Document Term Matrix</em> again.</p>
+</div>
+<div id="hint-1-25" class="section level3">
+<h3>Hint 1</h3>
+<p>Look at what you did at Question 5.1 for inspiration</p>
+</div>
+<div id="hint-2-22" class="section level3">
+<h3>Hint 2</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="answer-24" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>dtm &lt;- DocumentTermMatrix(corpus)</code></pre>
+</div>
+</div>
+<div id="check-matrix" class="section level2 tabset tabset-pills">
+<h2>8.2 Check matrix</h2>
+<div id="question-26" class="section level3">
+<h3>Question</h3>
+<p>Look at the Matrix you’ve created to see if everything is right</p>
+</div>
+<div id="hint-1-26" class="section level3">
+<h3>Hint 1</h3>
+<p>You can use the <code>inspect()</code> function to look at your matrix. You can use <code>?inspect</code> to find out how this function works.</p>
+</div>
+<div id="hint-2-23" class="section level3">
+<h3>Hint 2</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="answer-25" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>inspect(dtm)</code></pre>
+<pre><code>## &lt;&lt;DocumentTermMatrix (documents: 297, terms: 879)&gt;&gt;
+## Non-/sparse entries: 1943/259120
+## Sparsity           : 99%
+## Maximal term length: 122
+## Weighting          : term frequency (tf)
+## Sample             :
+##                          Terms
+## Docs                      can group ill just like question use will work wouter
+##   11_12_20, 20_22.txt       1     0   0    0    1        0   0    0    0      1
+##   11_12_20, 20_31.txt       2     0   0    1    1        0   2    0    0      0
+##   11_18_20, 10_00.txt       0     0   1    0    0        0   0    0    0      1
+##   11_19_20, 10_28 (1).txt   0     0   0    0    0        0   0    0    0      0
+##   11_25_20, 11_56.txt       2     0   0    1    0        0   1    3    0      0
+##   11_25_20, 21_54.txt       0     0   0    0    0        0   1    1    0      1
+##   11_26_20, 12_18.txt       1     0   0    0    0        0   0    1    0      0
+##   11_27_20, 17_34 (2).txt   0     0   1    0    0        1   1    0    1      0
+##   11_27_20, 17_34 (3).txt   0     0   0    0    0        0   0    2    0      0
+##   11_28_20, 21_22.txt       2     0   0    1    0        0   0    2    0      0</code></pre>
+</div>
+</div>
+<div id="remove-sparse-terms" class="section level2 tabset tabset-pills">
+<h2>8.3 Remove sparse terms</h2>
+<div id="question-27" class="section level3">
+<h3>Question</h3>
+<p>Since most of the terms in your documents are very rare (they don’t occur often) they will not help you a lot with your analysis. Therefore you can remove the sparse terms. Make sure to check your matrix, so you don’t remove too much.</p>
+</div>
+<div id="hint-1-27" class="section level3">
+<h3>Hint 1</h3>
+<p>You can use the <code>removeSparseTerms()</code> function to remove terms that are quite rare.</p>
+</div>
+<div id="hint-2-24" class="section level3">
+<h3>Hint 2</h3>
+<p>Look at the sparsity in the results of your matrix. If the overall sparsity is very high, you also want the cutoff-point for the removal of sparse terms to be quite high, because else you might remove too many terms.</p>
+</div>
+<div id="hint-3-17" class="section level3">
+<h3>Hint 3</h3>
+<p>Use <code>inspect(dtm)</code> to check how many terms are still left after you remove the sparse terms. If this is a very low amount, you might want to put the sparsity used to <code>removeSparseTerms()</code> a bit higher.</p>
+</div>
+<div id="hint-4-6" class="section level3">
+<h3>Hint 4</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="answer-26" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>dtm &lt;- dtm %&gt;% 
+  removeSparseTerms(0.95)
+
+# Check result
+inspect(dtm)</code></pre>
+<pre><code>## &lt;&lt;DocumentTermMatrix (documents: 297, terms: 8)&gt;&gt;
+## Non-/sparse entries: 156/2220
+## Sparsity           : 93%
+## Maximal term length: 6
+## Weighting          : term frequency (tf)
+## Sample             :
+##                          Terms
+## Docs                      can ill just like think will work wouter
+##   11_12_20, 20_22.txt       1   0    0    1     0    0    0      1
+##   11_12_20, 20_25 (1).txt   1   0    0    0     1    0    0      0
+##   11_12_20, 20_25.txt       0   0    1    1     0    0    1      0
+##   11_12_20, 20_31.txt       2   0    1    1     0    0    0      0
+##   11_12_20, 22_59.txt       1   0    0    0     0    0    2      0
+##   11_14_20, 12_43.txt       0   1    2    0     0    0    0      0
+##   11_25_20, 09_07.txt       0   0    1    1     0    1    0      0
+##   11_25_20, 11_56.txt       2   0    1    0     0    3    0      0
+##   11_28_20, 21_22.txt       2   0    1    0     0    2    0      0
+##   11_3_20, 12_40.txt        0   0    0    0     0    1    1      1</code></pre>
+</div>
+</div>
+<div id="convert-to-dataframe" class="section level2 tabset tabset-pills">
+<h2>8.4 Convert to dataframe</h2>
+<div id="question-28" class="section level3">
+<h3>Question</h3>
+<p>In order to use this in our analysis, the <em>Document Term Matrix</em> needs to be converted to a <em>data frame</em>. You can’t convert it directly to a dataframe, however, so you need to convert it to a normal <em>matrix</em> first before you can convert it to a dataframe.</p>
+</div>
+<div id="hint-1-28" class="section level3">
+<h3>Hint 1</h3>
+<p>You can use the <code>as.data.frame()</code> function to convert a matrix to a dataframe. Use <code>?as.data.frame</code> to find out how to use this function</p>
+</div>
+<div id="hint-2-25" class="section level3">
+<h3>Hint 2</h3>
+<p>To find out how to convert a <em>DTM</em> to a matrix, you can look at what you did in question 5.2</p>
+</div>
+<div id="hint-3-18" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="answer-27" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>dtm &lt;- dtm %&gt;% 
+  as.matrix() %&gt;% 
+  as.data.frame()</code></pre>
+</div>
+</div>
+<div id="add-metadata-1" class="section level2 tabset tabset-pills">
+<h2>8.5 Add metadata</h2>
+<div id="question-29" class="section level3">
+<h3>Question</h3>
+<p>When converting to a dataframe, the metadata hasn’t converted along. Therefore, you need to add a column with that metadata to your newly made dataframe.</p>
+</div>
+<div id="hint-1-29" class="section level3">
+<h3>Hint 1</h3>
+<p>To select a column from a dataframe, you can use the <code>$</code>-sign. So if you want to read the <code>is_me</code> column, you type:</p>
+<pre class="r"><code>dtm$is_me </code></pre>
+<p>Similarly, you can also add data that way. Suppose we have 10 terms, then I can add the metadata like this:</p>
+<pre class="r"><code>dtm$is_me &lt;- c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE)</code></pre>
+</div>
+<div id="hint-2-26" class="section level3">
+<h3>Hint 2</h3>
+<p>Like explained in section 7.3, you can also use the <code>meta()</code> function to read metadata. The read metadata can then be used to assign it to a column in the data frame again.</p>
+</div>
+<div id="answer-28" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>dtm$is_me &lt;- meta(corpus)$is_me</code></pre>
+</div>
+</div>
+</div>
+<div id="split-dataset" class="section level1">
+<h1>9. Split dataset</h1>
+<p>Now that we got the classifier, we can try to create a model to determine the author of each message. However, we also want to be able to test that model, and if we use the same dataset for training and for testing, our accuracy is unrealisticly high. Therefore, we want to split the dataset in a training and testing part.</p>
+<div id="determine-test-indices" class="section level2 tabset tabset-pills">
+<h2>9.1 Determine test indices</h2>
+<div id="question-30" class="section level3">
+<h3>Question</h3>
+<p>Every document in the dataset has a number, the first one has number <code>1</code>, the second one <code>2</code>, etc. To split the dataset into a training and testing part, we want to get a random sample of 25% of the data. To do this, we first let R pick a couple of random numbers. These numbers we can then use to get the documents with the index of those numbers, and use that as our test sample. Try to create a list with random numbers that has the length of 25% of the full corpus.</p>
+</div>
+<div id="hint-1-30" class="section level3">
+<h3>Hint 1</h3>
+<p>You can use the <code>sample()</code> function to create a list with random numbers. If you want to pick 3 random numbers from a list of 1 to 10, you can do:</p>
+<pre class="r"><code>sample(1:10, 3)</code></pre>
+<pre><code>## [1] 2 9 1</code></pre>
+<p>You can use <code>?sample</code> to find out how this function works</p>
+</div>
+<div id="hint-2-27" class="section level3">
+<h3>Hint 2</h3>
+<p>To find out how many units are in your dataset to pick a sample from, you can count the rows in your <em>Document Term Matrix</em>. You can do that using the <code>nrows()</code> function</p>
+</div>
+<div id="hint-3-19" class="section level3">
+<h3>Hint 3</h3>
+<p>The numbers that the function can pick from lie between 1 and the number of rows. The number of samples that need to be picked is the number of rows mulitplied by 0.25.</p>
+</div>
+<div id="hint-4-7" class="section level3">
+<h3>Hint 4</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="answer-29" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>test_indices &lt;- sample( 1:nrow(dtm), nrow(dtm) * 0.25 )
+test_indices</code></pre>
+<pre><code>##  [1] 264 179  18  77 103 108 149 174   5 105 230 227 247 121  13 237 233  10 184
+## [20]  33 197 287  87 241 226   7 202  26 173 277 180 281 120  90  68 232  27 102
+## [39] 289 130  45  37  56  11 201 114  92  29  55 112 205 128 261 273 144   9 265
+## [58]  82 260  31  72 181  83  30 266 192 193 198 117  39 213 166 224  62</code></pre>
+</div>
+</div>
+<div id="create-datasets" class="section level2 tabset tabset-pills">
+<h2>9.2 Create datasets</h2>
+<div id="question-31" class="section level3">
+<h3>Question</h3>
+<p>Now that you have the indices of the units you want in your test sample, you can split the actual dataset into two. Split the <code>dtm</code> into <code>dtm_test</code> and <code>dtm_training</code></p>
+</div>
+<div id="hint-1-31" class="section level3">
+<h3>Hint 1</h3>
+<p>You can use square brackets to select certain cases from a dataframe. For example, if I want to select the first case, I do:</p>
+<pre class="r"><code>dtm[1]</code></pre>
+<p>If I want to select a list of cases, for example cases 1, 3 and 5, I can also do that.</p>
+<pre class="r"><code>dtm[c(1,3,5), ]</code></pre>
+<p>If I want to select all except case 1, 3 and 5, I can use the <code>-</code> sign.</p>
+<pre class="r"><code>dtm[-c(1,3,5), ]</code></pre>
+</div>
+<div id="hint-2-28" class="section level3">
+<h3>Hint 2</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="answer-30" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>dtm_test &lt;- dtm[test_indices, ]
+dtm_training &lt;- dtm[-test_indices, ]</code></pre>
+</div>
+</div>
+</div>
+<div id="create-decision-tree" class="section level1">
+<h1>10. Create decision tree</h1>
+<p>Now that we have a training set, we can finally use this training set to make some actual models. The first model we make is a decision tree.</p>
+<div id="create-tree" class="section level2 tabset tabset-pills">
+<h2>10.1 Create tree</h2>
+<div id="question-32" class="section level3">
+<h3>Question</h3>
+<p>Create a decision tree of the training data, to see if you can determine if you are the author of a message (<code>is_me</code>) using the words used in the messages, and save this tree in a variable called <code>tree</code>. View the tree afterwards, to see the result.</p>
+</div>
+<div id="hint-1-32" class="section level3">
+<h3>Hint 1</h3>
+<p>You can use the <code>rpart()</code> function to create a decision tree. Use <code>?rpart</code> to find out how this function works.</p>
+</div>
+<div id="hint-2-29" class="section level3">
+<h3>Hint 2</h3>
+<p>You want to know if the column <code>is_me</code> is dependent on all the other columns in your dataset, which contain the words. You can select all other columns using a <code>.</code>. This will give you the formula <code>is_me ~ .</code></p>
+</div>
+<div id="hint-3-20" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="answer-31" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>tree &lt;- rpart( is_me ~ ., data = dtm_training, method = &quot;class&quot; )
+tree</code></pre>
+<pre><code>## n= 223 
+## 
+## node), split, n, loss, yval, (yprob)
+##       * denotes terminal node
+## 
+##  1) root 223 85 FALSE (0.6188341 0.3811659)  
+##    2) can&lt; 0.5 200 70 FALSE (0.6500000 0.3500000)  
+##      4) ill&gt;=0.5 11  0 FALSE (1.0000000 0.0000000) *
+##      5) ill&lt; 0.5 189 70 FALSE (0.6296296 0.3703704)  
+##       10) like&lt; 0.5 181 64 FALSE (0.6464088 0.3535912)  
+##         20) think&lt; 0.5 172 58 FALSE (0.6627907 0.3372093) *
+##         21) think&gt;=0.5 9  3 TRUE (0.3333333 0.6666667) *
+##       11) like&gt;=0.5 8  2 TRUE (0.2500000 0.7500000) *
+##    3) can&gt;=0.5 23  8 TRUE (0.3478261 0.6521739) *</code></pre>
+</div>
+</div>
+<div id="plot-tree" class="section level2 tabset tabset-pills">
+<h2>10.2 Plot tree</h2>
+<div id="question-33" class="section level3">
+<h3>Question</h3>
+<p>Now try to plot this tree, so you can see it in a nice visual</p>
+</div>
+<div id="hint-1-33" class="section level3">
+<h3>Hint 1</h3>
+<p>You can use the <code>rpart.plot()</code> function to plot a decision tree. Use <code>?rpart.plot</code> to find out how this function works.</p>
+</div>
+<div id="hint-2-30" class="section level3">
+<h3>Hint 2</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="answer-32" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>rpart.plot(tree, type = 4, fallen = F)</code></pre>
+<p><img src="whatsapp_files/figure-html/unnamed-chunk-75-1.png" width="672" /></p>
+</div>
+</div>
+<div id="make-predictions" class="section level2 tabset tabset-pills">
+<h2>10.3 Make predictions</h2>
+<div id="question-34" class="section level3">
+<h3>Question</h3>
+<p>Now use this model to make predictions about your test data.</p>
+</div>
+<div id="hint-1-34" class="section level3">
+<h3>Hint 1</h3>
+<p>You can use the <code>predict()</code> function to make predictions using a model. Use <code>?predict</code> to find out how this function works.</p>
+</div>
+<div id="hint-2-31" class="section level3">
+<h3>Hint 2</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="answer-33" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>prediction_tree &lt;- predict(tree, newdata = dtm_test, type = &quot;class&quot;)
+prediction_tree &lt;- prediction_tree  == &quot;TRUE&quot;</code></pre>
+</div>
+</div>
+<div id="judge-accuracy" class="section level2 tabset tabset-pills">
+<h2>10.4 Judge accuracy</h2>
+<div id="question-35" class="section level3">
+<h3>Question</h3>
+<p>Now that you have a prediction for each row saved, you can compare it to the actual values. To do that, you first need to make a table with in one column the actual values and in one column the predicted values. After this, you can automatically count where they are the same and where not. This will give you a table showing where the predictions and truths line up. Try to make such a table.</p>
+<p>You can also calculate the overall accuracy, by checking if your your predicted values are the same as the actual values (<code>1</code>) or not (<code>0</code>) and then calculating the mean of that.</p>
+</div>
+<div id="hint-1-35" class="section level3">
+<h3>Hint 1</h3>
+<p>You can create a table with the real and predicted values using the <code>tibble()</code> function, and then see if they align using the <code>tabyl()</code> function. Find out how these functions work using <code>?tibble</code> and <code>?tabyl</code></p>
+</div>
+<div id="hint-2-32" class="section level3">
+<h3>Hint 2</h3>
+<p>You can check if the prediction and truth are the same using the <code>==</code> operator.</p>
+</div>
+<div id="hint-3-21" class="section level3">
+<h3>Hint 3</h3>
+<p>You can select the column with the real values from your test set using the <code>$</code> sign, like this:</p>
+<pre class="r"><code>dtm_test$is_me</code></pre>
+</div>
+<div id="hint-4-8" class="section level3">
+<h3>Hint 4</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="answer-34" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code># Accuracy table
+tibble(predicted = prediction_tree, truth = dtm_test$is_me) %&gt;% 
+  tabyl(predicted, truth) %&gt;% 
+  adorn_title(&quot;combined&quot;)</code></pre>
+<pre><code>##  predicted/truth FALSE TRUE
+##            FALSE    33   27
+##             TRUE     7    7</code></pre>
+<pre class="r"><code># Accuracy number
+mean(prediction_tree == dtm_test$is_me)</code></pre>
+<pre><code>## [1] 0.5405405</code></pre>
+</div>
+</div>
+</div>
+<div id="make-logistic-regression" class="section level1">
+<h1>11. Make logistic regression</h1>
+<p>Instead of using a prediction tree, we can also make a <em>generalized linear model</em>. This will give us a formula with which we can calculate for each case if it is written by you or not.</p>
+<div id="determine-importance" class="section level2 tabset tabset-pills">
+<h2>11.1 Determine importance</h2>
+<div id="question-36" class="section level3">
+<h3>Question</h3>
+<p>To determine which variables we will use in our model, we can look what the most influencial variables are according to our prediction tree. Try to find out the 2 most influencial variables.</p>
+</div>
+<div id="hint-1-36" class="section level3">
+<h3>Hint 1</h3>
+<p>You can get the most important variables using <code>tree$variable.importance</code></p>
+</div>
+<div id="hint-2-33" class="section level3">
+<h3>Hint 2</h3>
+<p>You can use <code>head()</code> to only get the first few items in the list. Use <code>?head</code> to find out how this function works</p>
+</div>
+<div id="answer-35" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>head(tree$variable.importance, 2)</code></pre>
+<pre><code>##      can      ill 
+## 3.767011 2.851852</code></pre>
+</div>
+</div>
+<div id="create-regression" class="section level2 tabset tabset-pills">
+<h2>11.2 Create regression</h2>
+<div id="question-37" class="section level3">
+<h3>Question</h3>
+<p>Now I know in my dataset <code>can</code> and <code>ill</code> are the most influencial variables. Now I will create a generalized linear model using your training dataset, to see if <code>is_me</code> is dependent on <code>can</code> and <code>ill</code>. Check your linear model afterwards.</p>
+</div>
+<div id="hint-1-37" class="section level3">
+<h3>Hint 1</h3>
+<p>You can make generalized linear models using the <code>glm</code> function. Try to find out how this function works using <code>?glm</code>.</p>
+</div>
+<div id="hint-2-34" class="section level3">
+<h3>Hint 2</h3>
+<p>I want to find out if <code>is_me</code> is dependent on <code>can</code> and <code>ill</code>, so my formula is <code>is_me ~ can + ill</code></p>
+</div>
+<div id="hint-3-22" class="section level3">
+<h3>Hint 3</h3>
+<p>You can view your model using the <code>summary()</code> function. Try to find out how this function works using <code>?summary</code>.</p>
+</div>
+<div id="hint-4-9" class="section level3">
+<h3>Hint 4</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="answer-36" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>logistic_regression &lt;- glm(is_me ~ can + ill, 
+                               data = dtm_training, family = binomial)
+summary(logistic_regression)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = is_me ~ can + ill, family = binomial, data = dtm_training)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.8772  -0.9601  -0.9601   1.4115   1.4115  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  -0.5352     0.1499  -3.570 0.000357 ***
+## can           1.0543     0.3816   2.763 0.005727 ** 
+## ill         -16.1435   681.6462  -0.024 0.981105    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 296.43  on 222  degrees of freedom
+## Residual deviance: 275.18  on 220  degrees of freedom
+## AIC: 281.18
+## 
+## Number of Fisher Scoring iterations: 15</code></pre>
+</div>
+</div>
+<div id="make-predictions-1" class="section level2 tabset tabset-pills">
+<h2>11.3 Make predictions</h2>
+<div id="question-38" class="section level3">
+<h3>Question</h3>
+<p>Now use this model to make predictions about your test data. Since these predictions will be numbers between 0 and 1, we assume everything higher then <code>.5</code> is <code>TRUE</code> and lower is <code>FALSE</code></p>
+</div>
+<div id="hint-1-38" class="section level3">
+<h3>Hint 1</h3>
+<p>Look at what you did in question 10.3 and try to do something similar.</p>
+</div>
+<div id="hint-2-35" class="section level3">
+<h3>Hint 2</h3>
+<p>To check if a value is higher or lower then .5, you can do <code>value &gt; .5</code></p>
+</div>
+<div id="hint-3-23" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="answer-37" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>prediction_glm &lt;- predict(logistic_regression, newdata = dtm_test, type = &quot;response&quot;)
+prediction_glm &lt;- prediction_glm &gt; .5</code></pre>
+</div>
+</div>
+<div id="judge-accuracy-1" class="section level2 tabset tabset-pills">
+<h2>11.4 Judge accuracy</h2>
+<div id="question-39" class="section level3">
+<h3>Question</h3>
+<p>Now that you have a prediction for each row, we can determine the accuracy again. Give a accuracy table and number.</p>
+</div>
+<div id="hint-1-39" class="section level3">
+<h3>Hint 1</h3>
+<p>Look at what you did in question 10.4 and try to do something similar.</p>
+</div>
+<div id="hint-3-24" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="answer-38" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>tibble(predicted = prediction_glm, truth = dtm_test$is_me) %&gt;% 
+  tabyl(predicted, truth) %&gt;% 
+  adorn_title(&quot;combined&quot;)</code></pre>
+<pre><code>##  predicted/truth FALSE TRUE
+##            FALSE    37   30
+##             TRUE     3    4</code></pre>
+<pre class="r"><code>mean(prediction_glm == dtm_test$is_me)</code></pre>
+<pre><code>## [1] 0.5540541</code></pre>
+</div>
+</div>
+</div>
+<div id="wordcount-based-logistic-regression" class="section level1">
+<h1>12. Wordcount based logistic regression</h1>
+<p>Instead of looking at the words used, we can also try to look at the <strong>number</strong> of words used, to see if that might give a more accurate prediction</p>
+<div id="count-words" class="section level2 tabset tabset-pills">
+<h2>12.1 Count words</h2>
+<div id="question-40" class="section level3">
+<h3>Question</h3>
+<p>Try to count the number of words used for each document. Also add the <code>is_me</code> variable and convert it to an <code>integer</code>, because that is needed for future questions.</p>
+<p>N.B. This is never done in the lessons, so you can just look at the answers, but you can also try to figure it out yourself if you like a challenge</p>
+</div>
+<div id="hint-1-40" class="section level3">
+<h3>Hint 1</h3>
+<p>In question 5.2 you determined the total amount for each word over all documents using the <code>colSums()</code> function. Now you want to determine for each document the total amount over all words, so you can do something similar using the <code>rowSums()</code> function</p>
+</div>
+<div id="hint-2-36" class="section level3">
+<h3>Hint 2</h3>
+<p>Similarly to question 5.4, you can use the <code>tibble()</code> function, to create a table with the total wordcount for each document.</p>
+</div>
+<div id="answer-39" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>wc &lt;- corpus %&gt;%
+  DocumentTermMatrix() %&gt;% 
+  as.matrix() %&gt;% 
+  rowSums() %&gt;%
+  tibble(
+    count = .,
+    is_me = as.integer(meta(corpus)$is_me)
+  )</code></pre>
+</div>
+</div>
+<div id="split-test-and-train" class="section level2 tabset tabset-pills">
+<h2>12.2 Split test and train</h2>
+<div id="question-41" class="section level3">
+<h3>Question</h3>
+<p>Now that you have an overview for all documents of the wordcount, you need to split that again in a training and testing part. You can use the same indeces you created before.</p>
+</div>
+<div id="hint-1-41" class="section level3">
+<h3>Hint 1</h3>
+<p>Look what you did at question 9.2 and try to do something similar.</p>
+</div>
+<div id="answer-40" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>wc_test &lt;- wc[test_indices, ]
+wc_training &lt;- wc[-test_indices, ]</code></pre>
+</div>
+</div>
+<div id="create-model" class="section level2 tabset tabset-pills">
+<h2>12.3 Create model</h2>
+<div id="question-42" class="section level3">
+<h3>Question</h3>
+<p>Now we can create a generalized linear model to see if <code>is_me</code> is dependent on the wordcount (<code>count</code>). Tidy up the model to view it afterwards.</p>
+</div>
+<div id="hint-1-42" class="section level3">
+<h3>Hint 1</h3>
+<p>Look what you did at question 11.2 and try to do something similar.</p>
+</div>
+<div id="hint-2-37" class="section level3">
+<h3>Hint 2</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2029555">tutorial about <em>Generalised linear models</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-3-25" class="section level3">
+<h3>Hint 3</h3>
+<p>You want to know if <code>is_me</code> is dependent on the <code>count</code>, so your formula is <code>is_me ~ count</code></p>
+</div>
+<div id="hint-4-10" class="section level3">
+<h3>Hint 4</h3>
+<p>You can use the <code>tidy()</code> function to tidy up your model.</p>
+</div>
+<div id="hint-5-3" class="section level3">
+<h3>Hint 5</h3>
+<p>Look at this code fromt he tutorial, and try to modify it for your own code</p>
+<pre class="r"><code>model &lt;- workstress %&gt;% 
+  glm(WRSD ~ hours.at.work, data = ., family = binomial) 
+
+library(broom)
+model %&gt;% 
+  tidy()</code></pre>
+</div>
+<div id="answer-41" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>model &lt;- wc_training %&gt;% 
+  glm(is_me ~ count, data = ., family = binomial)
+tidy(model)</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term        estimate std.error statistic    p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+## 1 (Intercept)  -0.907     0.189      -4.79 0.00000165
+## 2 count         0.0606    0.0189      3.21 0.00133</code></pre>
+</div>
+</div>
+<div id="visualize-model" class="section level2 tabset tabset-pills">
+<h2>12.4 Visualize model</h2>
+<div id="question-43" class="section level3">
+<h3>Question</h3>
+<p>You can also show this regression in a plot. Create a scatterplot using <code>ggplot</code> of your plotpoints, and add a regression line to it.</p>
+</div>
+<div id="hint-1-43" class="section level3">
+<h3>Hint 1</h3>
+<p>To make plots with <code>ggplot</code> you always need at least two functions. The first function you need is <code>ggplot()</code>. This is required for every plot you make. This function basically creates the axis for the plot. As an argument for this function you need to put in an aestetics map (<code>aes()</code>). With this map, you tell R which visual elements represent which data. You can link variables, for example, to the <code>x</code>, <code>y</code>, <code>color</code> and <code>fill</code> of your graph.</p>
+<p>Now that you created the background with <code>ggplot()</code> you can add layers to it with the actual graphs using the <code>+</code> sign. For example, you can use <code>geom_point()</code> for a scatterplot, <code>geom_line()</code> for a line, <code>geom_smooth()</code> for a regression line, or <code>geom_col()</code> for a bar chart.</p>
+</div>
+<div id="hint-2-38" class="section level3">
+<h3>Hint 2</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2029555">tutorial about <em>Generalised linear models</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="hint-3-26" class="section level3">
+<h3>Hint 3</h3>
+<p>Look at this code from the tutorial. Can you modify it to use it in your own code?</p>
+<pre class="r"><code>workstress %&gt;% 
+  ggplot(aes(x = hours.at.work, y = WRSD)) +
+  geom_point() +
+  geom_smooth(method = &quot;glm&quot;, method.args = list(family = binomial), se = F)</code></pre>
+</div>
+<div id="answer-42" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>wc_training %&gt;% 
+  ggplot(aes(y = is_me, x = count)) +
+  geom_point() +
+  geom_smooth(method = &quot;glm&quot;, method.args = list(family = binomial), se = F)</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="whatsapp_files/figure-html/unnamed-chunk-88-1.png" width="672" /></p>
+</div>
+</div>
+<div id="judge-accuracy-2" class="section level2 tabset tabset-pills">
+<h2>12.5 Judge accuracy</h2>
+<div id="question-44" class="section level3">
+<h3>Question</h3>
+<p>Now that you have a new model, try to make predictions again and determine the accuracy. Give a accuracy table and number.</p>
+</div>
+<div id="hint-1-44" class="section level3">
+<h3>Hint 1</h3>
+<p>Look at what you did in question 11.3 and 11.4 and try to do something similar.</p>
+</div>
+<div id="hint-3-27" class="section level3">
+<h3>Hint 3</h3>
+<p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
+</div>
+<div id="answer-43" class="section level3">
+<h3>Answer</h3>
+<pre class="r"><code>prediction_wc &lt;- predict(model, newdata = wc_test, type = &quot;response&quot;)
+prediction_wc &lt;- prediction_wc &gt; .5
+
+tibble(predicted = prediction_wc, truth = wc_test$is_me) %&gt;% 
+  tabyl(predicted, truth) %&gt;% 
+  adorn_title(&quot;combined&quot;)</code></pre>
+<pre><code>##  predicted/truth  0  1
+##            FALSE 39 30
+##             TRUE  1  4</code></pre>
+<pre class="r"><code>mean(prediction_wc == wc_test$is_me)</code></pre>
+<pre><code>## [1] 0.5810811</code></pre>
+</div>
+</div>
+</div>
+<div id="reflect" class="section level1">
+<h1>13. Reflect</h1>
+<p>Which model had the highest accuracy in predicting the message author. Why do you think that is? Can you think of any way to improve the accuracy of some of the models?</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

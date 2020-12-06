@@ -1,0 +1,1358 @@
+---
+title: "WhatsApp R-assignment"
+author: "By Wouter Stoter"
+date: "6/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r echo=F}
+set.seed(8192743)
+```
+
+In this assignment you will analyze your own WhatsApp conversations. You will first import the conversation as a corpus, then you will clean it, you will visualize the most used words with a wordcoud and you will use machine learning to identify the author of messages.
+
+There are hints and answers present in the document, but try to only look at them if you get stuck. After you found the answer, it can still be helpfull to look back at the hints to understand your code better.
+
+# 1. Import Packages {.tabset  .tabset-pills}
+## Question
+In this assignment, you will need certain functions that are part of the following packages.
+
+- `tidyverse`
+- `tm`
+- `wordcloud`
+- `rpart`
+- `rpart.plot`
+- `janitor`
+- `broom`
+
+Please import these packages.
+
+## Hint 1
+Make sure that you install the package first before importing it.  
+When installing it, you might see a warning like this
+``` error
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+```
+This does not mean that the installation failed. It is not necessary to install Rtools. If the istallation gives the message below, your installation went successfully
+```
+package ‘tidyverse’ successfully unpacked and MD5 sums checked
+```
+If you do not know how to install a package, try googling [_install packages in R_](https://www.google.com/search?q=install+packages+in+R)
+
+## Hint 2
+When importing a package, you might get this message:
+```
+-- Attaching packages --------------------------------------- tidyverse 1.3.0 --
+v ggplot2 3.3.2     v purrr   0.3.4
+v tibble  3.0.3     v dplyr   1.0.2
+v tidyr   1.1.2     v stringr 1.4.0
+v readr   1.4.0     v forcats 0.5.0
+-- Conflicts ------------------------------------------ tidyverse_conflicts() --
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()
+```
+This does not mean the import failed. It just means that R imports several other packagestoo. These are packages that tidyverse needs to operate (dependencies). Sometimes, the same function name is used in multiple packages. That means that R will overwrite one function with another. These are conflicts. This is usually not a problem however, so you don't need to do anything with that.  
+If you do not know how to import a package, try googling [_import packages in R_](https://www.google.com/search?q=install+packages+in+R)
+
+## Answer
+If you have not used this library before, first install the package on your computer
+```{r eval=F}
+install.packages("tidyverse")
+install.packages("tm")
+install.packages("wordcloud")
+install.packages("rpart")
+install.packages("rpart.plot")
+install.packages("janitor")
+install.packages("broom")
+```
+Then you can import them
+```{r collapse=T}
+library(tidyverse)
+library(tm)
+library(wordcloud)
+library(rpart)
+library(rpart.plot)
+library(janitor)
+library(broom)
+```
+
+
+# 2. Export and import data
+## 2.1 Export Whatsapp conversation
+Go to a WhatsApp conversation with someone and export it. You can do that by pressing the 3 dots in the top-right corner, them press **More** and then press **Export chat**.
+
+<video src="files/WA_export.mp4" height="480px" loop muted autoplay></video>
+
+Then you can send the exported file to your computer, using e-mail, for example.
+
+## 2.2 Convert the file
+Select the file below to convert it to a corpus that can be used in R. This can take some time, especially if you have  a long history.
+
+<script src="https://stuk.github.io/jszip/dist/jszip.min.js"></script>
+<input type="file" id="wa_convert" name="WhatsApp conversation" accept=".txt"/>
+<script>
+  document.getElementById("wa_convert").onchange = function(e) {
+    var fakepath = this.value;
+    var file = e.target.files[0];
+    var fr = new FileReader();
+    fr.onload = function(e) {
+      var text = e.target.result.split("\n");
+      var messages = [];
+      var authors = {};
+      // Convert to JSON
+      for (l = 0; l < text.length; ++l) {
+        var time = text[l].split(" - ").slice(0,-1)[0];
+        if (!/^[0-9\.\/:, APM]{11,19}$/.test(time)) time = undefined;
+        if (!time && messages.length > 0) {
+          messages[messages.length - 1].text += "\n" + text[l]
+        } else {
+          if (time) text[l] = text[l].slice((time + " - ").length);
+          var author = text[l].split(": ").slice(0,-1)[0];
+          if (author) {
+            text[l] = text[l].slice((author + ": ").length);
+            if (!authors[author]) authors[author] = {name: author, messages: 0};
+            authors[author].messages++;
+          }
+          messages.push({
+            "time": time,
+            "author": author,
+            "text": text[l]
+          });
+        }
+      }
+      console.log(messages);
+      console.log(authors);
+      // Convert to ZIP
+      var zip = new JSZip();
+      var counter = 0;
+      messages = messages.filter(a => a.author)
+      for (i = 0; i < messages.length; ++i) {
+        if (i>0 && messages[i-1].time == messages[i].time) {
+          counter++;
+        } else {
+          counter = 0;
+        }
+        var filename = 
+          messages[i].author.replace(/["\*:<>?\/\\|]/g,"_") + 
+          "/" + 
+          messages[i].time.replace(/["\*:<>?\/\\|]/g,"_") + 
+          (counter ? " (" + counter + ")" : "") + 
+          ".txt";
+        ["<Media omitted>"].forEach(a => messages[i].text = messages[i].text.replaceAll(a,""));
+        if (messages[i].author && messages[i].text) zip.file(filename, messages[i].text);
+      }
+      console.log(zip);
+      //download zip
+      zip.generateAsync({type:"blob"})
+      .then(function (blob) {
+        var link = document.createElement("a"); // Or maybe get it from the current document
+        link.href = URL.createObjectURL(blob);
+        link.download = file.name.replace(".txt",".zip");
+        document.body.appendChild(link);
+        link.click();
+        URL.revokeObjectURL(link.href);
+        document.body.removeChild(link);
+        delete link;
+      });
+      //adjust code
+      authors = Object.values(authors).sort((a,b) => a.messages - b.messages).sort((a,b) => file.name.indexOf(a.name));
+      if (authors.length >= 2) {
+        var path = fakepath.replace(".txt","") + (fakepath.indexOf("/") == -1 ? "\\" : "/");
+        var path_a = JSON.stringify(path + authors[0].name.replace(/["\*:<>?\/\\|]/g,"_"));
+        var path_b = JSON.stringify(path + authors[1].name.replace(/["\*:<>?\/\\|]/g,"_"));
+      } else {
+        var path_a = JSON.stringify("C:\\fakepath\\WhatsApp Chat with Ioana Frîncu\\Wouter Stoter");
+        var path_b = JSON.stringify("C:\\fakepath\\WhatsApp Chat with Ioana Frîncu\\Ioana Frîncu");
+      }
+      document.querySelectorAll("#adjust_names .hljs-string")[0].innerText = path_a;
+      document.querySelectorAll("#adjust_names .hljs-string")[1].innerText = path_b;
+    }
+    fr.readAsText(file);
+  }
+</script>
+<font size="1pt">The conversation will take place locally, so your file will not be uploaded or stored on any server.</font>
+
+Please unzip the resulted file and copy the file location. For each person in the conversation, you will now have a folder with for each message they've sent a text-file.
+
+## 2.3 Import the data in R {.tabset  .tabset-pills}
+### Question
+Save the paths of the two folders with text files you have now in two variables, and use those variables to import the files in those folders as a corpus
+
+### Hint 1
+If your path contains any backslashes (`\`), you need to replace them with forward slashes (`/`) or double backslashes (`\\`)
+
+### Hint 2
+You can check if the directory path is correct using the `dir()` command. If the path is correct, this will give you a list of all filenames in the folder
+```{r eval=F}
+path <- "C:\\fakepath"
+dir(path)
+```
+
+### Hint 3
+You need to import the folder for each author separately
+
+### Hint 4
+Take a look at what you did in the [tutorial about _Text mining introduction_](https://canvas.utwente.nl/courses/7148/files/2043466). Is there any code in there you can use?
+
+### Hint 5
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+# we can do that directly;
+path_fake <- "/Users/stephanievandenberg/Desktop/News/FakeNews" 
+
+# note that I'm using a Mac, and my username is "stephanievandenberg". 
+# I've created a 'News' folder on the desktop into which I've extracted the folders
+# with the fake and real news articles.
+# For Windows PCs, the path will be something like 
+# "C:/Users/YourUserName/Desktop/News/FakeNews".
+# You can also use "C:\\Users\\YourUserName\\Desktop\\News\\FakeNews"
+
+# confirm that the fake articles are indeed in this folder;
+dir(path_fake) 
+
+# create a corpus `VCorpus( ... )` from a folder (directory) source `DirSource( ... )`
+fake_corpus <- VCorpus(DirSource(path_fake))
+
+# get a path to the 'real news' data
+path_real <- "/Users/stephanievandenberg/Desktop/News/RealNews"
+
+# check the path
+dir(path_real)
+
+# generate the real corpus
+real_corpus <- VCorpus(DirSource(path_real))
+```
+
+### Answer {#adjust_names}
+```{r eval=F}
+# Set the path of the folders
+path_a <- "C:\\fakepath\\WhatsApp Chat with Ioana Frîncu\\Wouter Stoter" 
+path_b <- "C:\\fakepath\\WhatsApp Chat with Ioana Frîncu\\Ioana Frîncu"
+
+# Check content of the folders
+dir(path_a)
+dir(path_b)
+
+#Import the content of the folders as a corpus
+corpus_a <- VCorpus(DirSource(path_a))
+corpus_b <- VCorpus(DirSource(path_b))
+```
+```{r echo=F}
+setwd("D:\\Google Drive (UTwente)\\Work\\R-workshop\\WhatsApp analysis\\WhatsApp Chat with Ioana Frîncu")
+corpus_a <- VCorpus(DirSource("Wouter Stoter"))
+corpus_b <- VCorpus(DirSource("Ioana Frîncu"))
+```
+
+# 3. Explore dataset
+## 3.1 File list {.tabset  .tabset-pills}
+### Question
+Try to get the file list from your first corpus
+
+### Hint 1
+Take a look at what you did in the [tutorial about _Text mining introduction_](https://canvas.utwente.nl/courses/7148/files/2043466). Is there any code in there you can use?
+
+### Hint 2
+You can use the 'summary()' function to get the summary of the corpus. You can type `?summary` to find out how this function works.
+
+### Hint 3
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+# check contents of the corpus
+summary(fake_corpus)
+```
+
+### Answer
+```{r}
+summary(corpus_a)
+```
+
+## 3.2 File metadata {.tabset  .tabset-pills}
+### Question
+Try to read the metadata from the first 5 documents in the corpus, and get the full metadata including content of the first document.
+
+### Hint 1
+Take a look at what is done in the introduction to [_Text mining_](https://canvas.utwente.nl/courses/7148/files/2043452/download?wrap=1). Is there any code in there you can use?
+
+### Hint 2
+You can use the 'inspect()' function to get the summary of the corpus. You can type `?inspect` to find out how this function works.
+
+### Hint 3
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+## The function inspect() displays detailed information on a corpus (or a
+## term-document matrix, or a text document)
+inspect(acq[1:2]) # information about the first text
+inspect(acq[[1]])  # the first text 
+```
+
+### Answer
+```{r}
+inspect(corpus_a[1:5])
+inspect(corpus_a[[1]])
+```
+
+## 3.3 Read content {.tabset  .tabset-pills}
+### Question
+Sometimes, you just only want the content, without the metadata. Try to do that for the first file.
+
+### Hint 1
+Take a look at what is done in the introduction to [_Text mining_](https://canvas.utwente.nl/courses/7148/files/2043452/download?wrap=1). Is there any code in there you can use?
+
+### Hint 2
+You can use the 'writeLines()' function to get the summary of the corpus. You can type `?writeLines` to find out how this function works.
+
+### Hint 3
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+writeLines(as.character(acq[[1]])) # the plain text only
+```
+
+### Answer
+```{r}
+writeLines(as.character(corpus_a[[1]]))
+```
+
+## 3.4 Explore other corpus {.tabset  .tabset-pills}
+### Question
+Now explore the other corpus too in the same way
+
+### Hint 1
+Take a look at the code from the previous questions, and modify it for this question
+
+### Answer
+```{r eval=F}
+summary(corpus_b) #View file list
+inspect(corpus_b[1:5]) #Information about the first few files
+inspect(corpus_b[[1]]) #The first text
+writeLines(as.character(corpus_b[[1]])) #The plain text only
+```
+
+
+# 4. Clean dataset
+Before we can analyze the data, we need to clean it, so it can be analyzed easily. First we are gonna clean the first dataset, and then at the end we can clean the other one too
+
+## 4.1 Stemming words {.tabset  .tabset-pills}
+### Question
+You want to make sure that different forms of the same word (e.g. walk, walking, walked, walks) get recognized as the same word. Therefore, you can **stem** the words in the documents in your corpus. This will bring every word back to it's stem. So walking, walked and walks all become walk. Try to perform this stemming on all documents in the first corpus. Check if you did it correctly by printing the first document.
+
+### Hint 1
+If you want to perform a content transformation on all documents in a corpus, you can use the `tm_map()` function. Try to find out how this function works using `?tm_map`.
+
+### Hint 2
+You can check if the stemming went correctly by looking at the first document. You can do that the same way as you did in 3.3, by using the following code:
+```{r eval=F}
+writeLines(as.character(corpus_a[[1]]))
+```
+
+### Hint 3
+Take a look at what is done in the introduction to [_Text mining_](https://canvas.utwente.nl/courses/7148/files/2043452/download?wrap=1). Is there any code in there you can use?
+
+### Hint 4
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+## 2. Stem words in a text document using Porter's stemming algorithm
+acq <- acq %>% 
+  tm_map(stemDocument)
+```
+
+### Answer
+```{r}
+corpus_a <- corpus_a %>%
+  tm_map(stemDocument)
+
+# Check first document
+writeLines(as.character(corpus_a[[1]]))
+```
+
+## 4.2 Remove punctuation {.tabset  .tabset-pills}
+### Question
+When analyzing, you don't want the punctuation to influence the analysis. For example, you want `"Yay!"` and `"Yay."` to be seen as the same word. Therefore, you can remove all the punctuation from the documents. Try to do this on all documents in the first corpus. Check if you did it correctly by printing the first document.
+
+### Hint 1
+Look at what you did in the previous question, and try to modify that code to remove the punctuation, instead of stemming the document.
+
+### Hint 2
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+## 3. Remove punctuation from the text
+acq <- acq %>% 
+  tm_map(removePunctuation)
+```
+
+### Answer
+```{r}
+corpus_a <- corpus_a %>%
+  tm_map(removePunctuation)
+
+# Check first document
+writeLines(as.character(corpus_a[[1]]))
+```
+
+## 4.3 Remove numbers {.tabset  .tabset-pills}
+### Question
+Numbers can also influence your results. Therefore, you can also remove all numbers from the documents. Try to do this on all documents in the first corpus. Check if you did it correctly by printing the first document.
+
+### Hint 1
+Look at what you did in the previous question, and try to modify that code to remove the punctuation, instead of stemming the document.
+
+### Hint 2
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+## 4. Remove numbers from the text
+acq <- acq %>% 
+  tm_map(removeNumbers)
+```
+
+### Answer
+```{r}
+corpus_a <- corpus_a %>%
+  tm_map(removeNumbers)
+
+# Check first document
+writeLines(as.character(corpus_a[[1]]))
+```
+
+## 4.4 Change to lowercase {.tabset  .tabset-pills}
+### Question
+Capital letters can also screw up your analysis. For example, you don't want `"Hello"` and `"hello"` to be seen as different words. Therfore, you can change the full text to lowercase. Try to do this on all documents in the first corpus. Check if you did it correctly by printing the first document.
+
+### Hint 1
+Look at what you did in the previous questions, and try to modify that code to remove the punctuation, instead of stemming the document.
+
+### Hint 2
+The function `tolower()` can be used on strings to change them to lowercase. However, this function can not be used directly on the documents in your corpus. Therefore you can use the `content_transformer()` function to modify normal functions so they can be used on the documents on your corpus.
+
+### Hint 3
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+## 1. translate upper case to lower case letters
+acq <- acq %>% 
+  tm_map(content_transformer(tolower))
+```
+
+### Answer
+```{r}
+corpus_a <- corpus_a %>%
+  tm_map(content_transformer(tolower))
+
+# Check first document
+writeLines(as.character(corpus_a[[1]]))
+```
+
+## 4.5 Remove stopwords {.tabset  .tabset-pills}
+### Question
+Certain words are used very often in language, but don't actually tell you anything about the content of the text, like **the** or **a**. We call these words **stopwords**. These words aren't interesting for your analysis and therfore you can remove them. Try to do this on all documents in the first corpus. Check if you did it correctly by printing the first document.
+
+### Hint 1
+Look at what you did in the previous questions, and try to modify that code to remove the punctuation, instead of stemming the document.
+
+### Hint 2
+To get a list of all stopwords in English, you can use the command below. Then you can use this list to remove these words in all documents.
+```{r}
+stopwords("english")
+```
+
+### Hint 3
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+## remove all words from the list stopwords("english")
+acq <- acq %>% 
+  tm_map(removeWords, stopwords("english"))
+```
+
+### Answer
+```{r}
+corpus_a <- corpus_a %>%
+  tm_map(removeWords, stopwords("english"))
+
+# Check first document
+writeLines(as.character(corpus_a[[1]]))
+```
+
+## 4.6 Remove additional whitespace {.tabset  .tabset-pills}
+### Question
+Because of all the words we've removed, we might now have multiple spaces after each other, because the words in between them have disappeared. Try to change all these double spaces to just one space. Try to do this on all documents in the first corpus. Check if you did it correctly by printing the first document.
+
+### Hint 1
+Look at what you did in the previous questions, and try to modify that code to remove the punctuation, instead of stemming the document.
+
+### Hint 2
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Hint 3
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+## 6. Remove too many spaces
+corpus <- corpus %>% 
+  tm_map(stripWhitespace)
+```
+
+### Answer
+```{r}
+corpus_a <- corpus_a %>%
+  tm_map(stripWhitespace)
+
+# Check first document
+writeLines(as.character(corpus_a[[1]]))
+```
+
+## 4.7 Remove special characters {.tabset  .tabset-pills}
+### Question
+Lastly, there are some special characters that can screw up your analysis too. You can also remove those. Try to do this on all documents in the first corpus. Check if you did it correctly by printing the first document.
+
+### Hint 1
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Hint 2
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+## 6. Remove too many spaces
+corpus <- corpus %>% 
+  tm_map(stripWhitespace)
+```
+
+### Answer
+```{r}
+corpus_a <- corpus_a %>%
+  tm_map(content_transformer(iconv), from = "latin1", to = "ASCII", sub = "" )
+
+# Check first document
+writeLines(as.character(corpus_a[[1]]))
+```
+
+## 4.8 Clean other dataset {.tabset  .tabset-pills}
+### Question
+Now that you've cleaned the first dataset, you also need to clean the second dataset. Try to do that using the commands you also used on the first dataset. You can try to do all commands at once using the pipe-operator (`%>%`). Check if everything went correctly by looking at the fist document.
+
+### Hint 1
+The pipe-operator (`%>%`) can string multiple commands together. For example, if I want to stem the document and remove the punctuation at once, i can do:
+```{r eval=F}
+corpus_b <- corpus_b %>%
+  tm_map(stemDocument) %>%
+  tm_map(removePunctuation)
+```
+
+### Answer
+```{r}
+corpus_b <- corpus_b %>%
+  tm_map(stemDocument) %>% #Stemming words
+  tm_map(removePunctuation) %>% #Remove punctuation
+  tm_map(removeNumbers) %>% #Remove numbers
+  tm_map(content_transformer(tolower)) %>% #Change to lowercase
+  tm_map(removeWords, stopwords("English")) %>% #Remove stopwords
+  tm_map(content_transformer(iconv), from = "latin1", to = "ASCII", sub = "" ) %>% #Remove special characters
+  tm_map(stripWhitespace) #Remove additional whitespace
+
+# Check first document
+writeLines(as.character(corpus_b[[1]]))
+```
+
+# 5. Find word frequencies
+Now we want to find out how often each word occurs in each corpus so we can make a nice overview of that and compare them.
+
+## 5.1 Create Document Term Matrix {.tabset  .tabset-pills}
+### Question
+Our fist step is converting our corpus to a *Document Term Matrix*. This matrix contains all the documents in the rows and all possible words in the collumns. Then in each cell, it has the number of times that word occurs in that document. Try to do make such a matrix for the first corpus.
+
+### Hint 1
+Take a look at what you did in the [tutorial about _Text mining introduction_](https://canvas.utwente.nl/courses/7148/files/2043466). Is there any code in there you can use?
+
+### Hint 2
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+# get document term matrices
+fake_dtm <- DocumentTermMatrix(fake_corpus)
+real_dtm <- DocumentTermMatrix(real_corpus)
+```
+
+### Answer
+```{r}
+dtm_a <- DocumentTermMatrix(corpus_a)
+```
+
+## 5.2 Count total amount of words {.tabset  .tabset-pills}
+### Question
+To get the total frequencies from this *Document Term Matrix* all we need to do is take the sum for every column, since every row contains the amount of times the word occurs in that document. However, we cant perform this action immediately on a *Document Term Matrix*, so we need to convert it to a normal *matrix* first.
+
+### Hint 1
+To convert a DTM to a normal matrix you can use the `as.matrix()` function. You can use `?as.matrix` to find out how it works.
+
+### Hint 2
+To get the sum of every column in a matrix you can use the `colSums()` function. You can use `?colSums` to find out how it works.
+
+### Hint 3
+The pipe-operator (`%>%`) can string multiple commands together. That way you can string both functions together
+
+### Hint 4
+Take a look at what you did in the [tutorial about _Text mining introduction_](https://canvas.utwente.nl/courses/7148/files/2043466). Is there any code in there you can use?
+
+### Hint 5
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+# get frequencies
+fake_freqs <- fake_dtm %>% 
+  as.matrix() %>% 
+  colSums()
+
+real_freqs <- real_dtm %>% 
+  as.matrix() %>% 
+  colSums()
+```
+
+### Answer
+```{r}
+freqs_a <- dtm_a %>% 
+  as.matrix() %>% 
+  colSums()
+```
+
+## 5.3 Sort by frequency {.tabset  .tabset-pills}
+### Question
+Because we would like to know which words are most frequent, we want to sort this by frequency. We want the most frequent words first, so we want to sort it in decreasing order.
+
+### Hint 1
+To sort we can use the `sort()` function. Use `?sort` to find out how this function works, and look at the arguments to see if you can change the order form increasing to decreasing.
+
+### Hint 2
+Take a look at what is done in the introduction to [_Text mining_](https://canvas.utwente.nl/courses/7148/files/2043452/download?wrap=1). Is there any code in there you can use?
+
+### Hint 3
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+# order, from high to low
+freqs <- freqs %>% 
+  sort(decreasing = TRUE)
+```
+
+### Answer
+```{r}
+freqs_a <- freqs_a %>% 
+  sort(decreasing = TRUE)
+```
+
+## 5.4 Create frequency table {.tabset  .tabset-pills}
+### Question
+Now you can try to transform this into a frequency table. In the first column of the table, you want to put the words. These are the column names from your matrix. In the second column you want to put the frequencies.
+
+### Hint 1
+To create such a table, you can use the `tibble()` function. In this function you can define for each column of the table which values you want to put in. So if you have a variable `a` and `b`, and `a` contains the words and `b` contains the frequencies, you can do:
+```{r eval=F}
+wf <- tibble(
+  word = a,
+  freqs = b
+)
+```
+You can use `?tibble` to learn more about this function
+
+### Hint 2
+To get the names of the columns from the matrix you can use the `names()` function. You can use `?names` to find out how it works.
+To make sure the order stays sorted in your frequency table, you might need to convert this list of names to a ordered factor. You can do that using the `factor()` function. You can use `?factor` to find out how this function works.
+
+### Hint 3
+Take a look at what is done in the introduction to [_Text mining_](https://canvas.utwente.nl/courses/7148/files/2043452/download?wrap=1). Is there any code in there you can use?
+
+### Hint 4
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+## First we make a data frame with the words themselves in one column, and their 
+## frequencies in another column.
+wf <- tibble(word = factor(names(freqs), names(freqs), ordered = TRUE), 
+             freqs = freqs)
+```
+
+### Answer
+```{r}
+wf_a <- tibble(word = factor(names(freqs_a), names(freqs_a), ordered = TRUE), 
+             freqs = freqs_a)
+```
+
+## 5.5 Other dataset {.tabset  .tabset-pills}
+### Question
+Now that you've determined the frequencies of the first dataset, you also need to do that for the second dataset. Try to do that using the commands you also used on the first dataset. You can try to do all commands at once using the pipe-operator (`%>%`). Check if everything went correctly by looking at the fist document.
+
+### Hint 1
+The pipe-operator (`%>%`) can string multiple commands together. For example, if I want to convert my corpus to a *Document Term Matrix* and convert that to a normal *matrix* at once, i can do:
+```{r eval=F}
+wf_b <- corpus_b %>%
+  DocumentTermMatrix()
+  as.matrix()
+```
+
+### Answer
+```{r}
+wf_b <- corpus_b %>%
+  DocumentTermMatrix() %>% #Create Document Term Matrix
+  as.matrix() %>% 
+  colSums() %>% #Count total amount of words
+  sort(decreasing = TRUE) %>% #Sort by frequency
+  tibble(word = factor(names(.), names(.), ordered = TRUE), freqs = .) #Create frequency table
+```
+
+# 6. Visualize
+Now that you've determined how often each word occurs, you can try to visualize it. First, we're gonna visualize the first corpus, and after that we try to do the same with the second one.
+
+## 6.1 Create bar chart {.tabset  .tabset-pills}
+### Question
+One way to visualize these frequencies is with a bar chart. You can do that using `ggplot()`. Try to create a bar-chart of the 20 most frequent words in the dataset, with the words on the y-axis, so they are easily readable.
+
+### Hint 1
+To make plots with `ggplot` you always need at least two functions.
+The first function you need is `ggplot()`. This is required for every plot you make. This function basically creates the axis for the plot. As an argument for this function you need to put in an aestetics map (`aes()`). With this map, you tell R which visual elements represent which data. You can link variables, for example, to the `x`, `y`, `color` and `fill` of your graph.
+
+Now that you created the background with `ggplot()` you can add layers to it with the actual graphs using the `+` sign. For example, you can use `geom_point()` for a scatterplot, `geom_line()` for a line, `geom_smooth()` for a regression line, or `geom_col()` for a bar chart.
+
+### Hint 2
+So imagine you have a dataset called `data` with 3 variables. The gender, a grade for module 1 and a grade for module 2. 
+```{r}
+data <- data.frame(
+  gender = c("Male","Male","Female","Male","Male","Female","Female","Female","Female","Male"),
+  grade_m1 = c(4.5,9.0,2.0,3.0,6.7,7.7,8.3,2.2,4.4,9.9),
+  grade_m2 = c(3.3,7.6,2.2,5.5,4.3,6.6,9.4,1.3,5.6,8.3)
+)
+```
+If you want to make a scatterplot with the grade of module 1 on the x-asis, and the grade of module 2 on the y-axis, and different colors for each gender, I would use the following code:
+```{r}
+data %>%
+  ggplot(aes(x = grade_m1, y = grade_m2, color = gender)) +
+  geom_point()
+```
+
+### Hint 3
+To get only the first few rows of your dataset, you can use the `top_n()` function. You can use `?top_n` to find out how this function works.
+
+### Hint 4
+Take a look at what is done in the introduction to [_Text mining_](https://canvas.utwente.nl/courses/7148/files/2043452/download?wrap=1). Is there any code in there you can use?
+
+### Hint 5
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+# create a rotated bar plot
+wf %>% 
+  top_n(20) %>%     # select only the 20 most frequent words
+  ggplot(aes(x = word, y = freqs)) + 
+  geom_col() +
+  coord_flip()  # rotate the axes so we can read the labels better
+```
+
+### Answer
+```{r}
+wf_a %>% 
+  top_n(20) %>%
+  ggplot(aes(x = word, y = freqs)) + 
+  geom_col() +
+  coord_flip()
+```
+
+Instead of flipping the axes using `coord_flip()`, you can also just switch the x and the y variable. This will give the same results
+
+```{r eval=F}
+wf_a %>% 
+  top_n(20) %>%
+  ggplot(aes(x = freqs, y = word)) + 
+  geom_col()
+```
+
+## 6.2 Create a wordcloud {.tabset  .tabset-pills}
+### Question
+Another way to visualize it, is using a wordcloud. Try to create a wordcloud with the 50 most used words in the corpus.
+
+### Hint 1
+You can create a wordcloud using the `wordcloud()` function in R. Try to find out how this function works using `?wordcloud`. Also look at the arguments, to see if you can use them to limit it to just 50 words.
+
+### Hint 2
+Take a look at what is done in the introduction to [_Text mining_](https://canvas.utwente.nl/courses/7148/files/2043452/download?wrap=1). Is there any code in there you can use?
+
+### Hint 3
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+## Make a wordcloud
+library(wordcloud)
+set.seed(142)
+
+wordcloud(wf$word, wf$freqs)
+
+wordcloud(wf$word, wf$freqs, min.freq = 25)
+wordcloud(wf$word, wf$freqs, max.words = 50)
+wordcloud(wf$word, wf$freqs, 
+          min.freq = 20, 
+          scale = c(5, .1), 
+          colors = brewer.pal(6, "Dark2"))
+```
+
+### Answer
+```{r}
+wordcloud(wf_a$word, wf_a$freqs, max.words = 50)
+```
+
+## 6.3 Visualize other dataset {.tabset  .tabset-pills}
+### Question
+Now that we've visualized the first corpus, we also want to do that for the other one, so we can compare them. You can try to add some colors to it too, to make them look nicer.
+
+### Hint 1
+If you don't know how to change the color, try googling [_R change color of ggplot bar chart_](https://www.google.com/search?q=R change color of ggplot bar chart)  
+or [_R wordcloud change color_](https://www.google.com/search?q=R wordcloud change color)
+
+### Hint 2
+You can change for each aestatic how it looks, by adding extra parameters to the `geom_col()` function, for example `fill` or `color`.
+
+### Hint 3
+To get a list of rainbow colors, you can use the `rainbow()` function. As an argument for that function, you can specify the amount of colors you want
+
+### Answer
+```{r}
+# Create bar chart
+wf_b %>% 
+  top_n(20) %>%
+  ggplot(aes(x = freqs, y = word)) + 
+  geom_col(fill = "blue")
+# Create wordcloud
+wordcloud(wf_b$word, wf_b$freqs, max.words = 50, color = rainbow(50))
+```
+
+# 7. Combine datasets
+We've seen in the visualizations that the word use of different people can be quite different. Using this information, we can try to predict based on the content of a message who has sent it. To do this, we first need to put both corpuses into one, and add extra information to it so R knows who has sent each message.
+
+## 7.1 Merge corpora {.tabset  .tabset-pills}
+### Question
+Try to put both corpora into one corpus.
+
+### Hint 1
+You can combine the corpora by putting them together in a list. You can create a list using the `c()` function. Try to find out how that function works using `?c`
+
+### Hint 2
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Hint 3
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+# combine the two corpora into one corpus
+corpus <- c(corpus_fake, corpus_real)
+```
+
+### Answer
+```{r}
+corpus <- c(corpus_a, corpus_b)
+```
+
+## 7.2 Count files {.tabset  .tabset-pills}
+### Question
+Now the corpuses are combined, but R doesn't know which document comes from which corpus anymore. Luckily, the documents are still in the same order, so first all documents from `corpus_a` and then all documents from `corpus_b`, so if we just count the amount of documents in each corpus, we can assign the first documents one piece of information, while assigning the documents after another piece of info. Try to find out how many documents are in each copus and save the result in a variable.
+
+### Hint 1
+To count the documents in a corpus, you can use the `length()` function. You can use `?length` to find out how this function works.
+
+### Hint 2
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Hint 3
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+n_real <- length(corpus_real) # number of real news articles
+n_fake <- length(corpus_fake) # number of fake news articles
+```
+
+### Answer
+```{r}
+n_a <- length(corpus_a)
+n_a
+n_b <- length(corpus_b)
+n_b
+```
+
+## 7.3 Add metadata {.tabset  .tabset-pills}
+### Question
+Now that we know how many documents we have of each, we can assign this information to each document. We will give that document *metadata*, which states if the document is written by you (`TRUE`) or not (`FALSE`). Call that piece of metadata `is_me`.
+
+### Hint 1
+You can use the `meta()` function to read a certain piece of metadata. For example, if I would want to read the metadata `is_me` for each document, I would type
+```{r eval=F}
+meta(corpus, "is_me")
+```
+
+This will give you a list with for each document the value of that piece of metadata. You can also assign it such a list to assign each document metadata. This list would need to contain one value for each document. If I would have 10 documents of which the first 5 were written by me, that could look like this for example:
+```{r eval=F}
+meta(corpus, "is_me") <- c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE)
+```
+You can type `?meta` to find out more.
+
+### Hint 2
+To repeat a certain value a certain amount of times, you can use the `rep()` function. So if I want a list with first 5 times `TRUE` and then 5 times `FALSE`, i could do:
+```{r eval=F}
+meta(corpus, "is_me") <- c(rep(TRUE,5), rep(FALSE,5))
+```
+You can type `?rep` to find out more.
+
+### Hint 3
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Hint 4
+Take a look at this code from that tutorial, and try to modify it for your own code
+```{r eval=F}
+# label each document with the 'truth' (fake or real news)
+# when a news article is FAKE, we say FAKE = TRUE, otherwise FALSE
+meta(corpus, "fake") <- c(rep(TRUE, n_fake), 
+                          rep(FALSE, n_real))
+```
+
+### Answer
+```{r}
+meta(corpus, "is_me") <- c(rep(TRUE, n_a), 
+                           rep(FALSE, n_b))
+```
+
+# 8. Create a classifier
+Now that we have the full corpus, we can create a classifier. 
+
+## 8.1 Create a Document Term Matrix {.tabset  .tabset-pills}
+### Question
+To do this, we fist need to create a *Document Term Matrix* again.
+
+### Hint 1
+Look at what you did at Question 5.1 for inspiration
+
+### Hint 2
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Answer
+```{r}
+dtm <- DocumentTermMatrix(corpus)
+```
+
+## 8.2 Check matrix {.tabset  .tabset-pills}
+### Question
+Look at the Matrix you've created to see if everything is right
+
+### Hint 1
+You can use the `inspect()` function to look at your matrix. You can use `?inspect` to find out how this function works.
+
+### Hint 2
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Answer
+```{r}
+inspect(dtm)
+```
+
+## 8.3 Remove sparse terms {.tabset  .tabset-pills}
+### Question
+Since most of the terms in your documents are very rare (they don't occur often) they will not help you a lot with your analysis. Therefore you can remove the sparse terms. Make sure to check your matrix, so you don't remove too much.
+
+### Hint 1
+You can use the `removeSparseTerms()` function to remove terms that are quite rare.
+
+### Hint 2
+Look at the sparsity in the results of your matrix. If the overall sparsity is very high, you also want the cutoff-point for the removal of sparse terms to be quite high, because else you might remove too many terms.
+
+### Hint 3
+Use `inspect(dtm)` to check how many terms are still left after you remove the sparse terms. If this is a very low amount, you might want to put the sparsity used to `removeSparseTerms()` a bit higher.
+
+### Hint 4
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Answer
+```{r}
+dtm <- dtm %>% 
+  removeSparseTerms(0.95)
+
+# Check result
+inspect(dtm)
+```
+
+## 8.4 Convert to dataframe {.tabset  .tabset-pills}
+### Question
+In order to use this in our analysis, the *Document Term Matrix* needs to be converted to a *data frame*. You can't convert it directly to a dataframe, however, so you need to convert it to a normal *matrix* first before you can convert it to a dataframe.
+
+### Hint 1
+You can use the `as.data.frame()` function to convert a matrix to a dataframe. Use `?as.data.frame` to find out how to use this function
+
+### Hint 2
+To find out how to convert a *DTM* to a matrix, you can look at what you did in question 5.2
+
+### Hint 3
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Answer
+```{r}
+dtm <- dtm %>% 
+  as.matrix() %>% 
+  as.data.frame()
+```
+
+## 8.5 Add metadata {.tabset  .tabset-pills}
+### Question
+When converting to a dataframe, the metadata hasn't converted along. Therefore, you need to add a column with that metadata to your newly made dataframe.
+
+### Hint 1
+To select a column from a dataframe, you can use the `$`-sign. So if you want to read the `is_me` column, you type:
+```{r eval=F}
+dtm$is_me 
+```
+Similarly, you can also add data that way. Suppose we have 10 terms, then I can add the metadata like this:
+```{r eval=F}
+dtm$is_me <- c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE)
+```
+
+### Hint 2
+Like explained in section 7.3, you can also use the `meta()` function to read metadata. The read metadata can then be used to assign it to a column in the data frame again.
+
+### Answer
+```{r}
+dtm$is_me <- meta(corpus)$is_me
+```
+
+# 9. Split dataset
+Now that we got the classifier, we can try to create a model to determine the author of each message. However, we also want to be able to test that model, and if we use the same dataset for training and for testing, our accuracy is unrealisticly high. Therefore, we want to split the dataset in a training and testing part.
+
+## 9.1 Determine test indices {.tabset  .tabset-pills}
+### Question
+Every document in the dataset has a number, the first one has number `1`, the second one `2`, etc. To split the dataset into a training and testing part, we want to get a random sample of 25% of the data. To do this, we first let R pick a couple of random numbers. These numbers we can then use to get the documents with the index of those numbers, and use that as our test sample.
+Try to create a list with random numbers that has the length of 25% of the full corpus.
+
+### Hint 1
+You can use the `sample()` function to create a list with random numbers. If you want to pick 3 random numbers from a list of 1 to 10, you can do:
+```{r}
+sample(1:10, 3)
+```
+You can use `?sample` to find out how this function works
+
+### Hint 2
+To find out how many units are in your dataset to pick a sample from, you can count the rows in your *Document Term Matrix*. You can do that using the `nrows()` function
+
+### Hint 3
+The numbers that the function can pick from lie between 1 and the number of rows. The number of samples that need to be picked is the number of rows mulitplied by 0.25.
+
+### Hint 4
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Answer
+```{r}
+test_indices <- sample( 1:nrow(dtm), nrow(dtm) * 0.25 )
+test_indices
+```
+
+## 9.2 Create datasets {.tabset  .tabset-pills}
+### Question
+Now that you have the indices of the units you want in your test sample, you can split the actual dataset into two. Split the `dtm` into `dtm_test` and `dtm_training`
+
+### Hint 1
+You can use square brackets to select certain cases from a dataframe. For example, if I want to select the first case, I do:
+```{r eval=F}
+dtm[1]
+```
+
+If I want to select a list of cases, for example cases 1, 3 and 5, I can also do that.
+```{r eval=F}
+dtm[c(1,3,5), ]
+```
+
+If I want to select all except case 1, 3 and 5, I can use the `-` sign.
+```{r eval=F}
+dtm[-c(1,3,5), ]
+```
+
+### Hint 2
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Answer
+```{r}
+dtm_test <- dtm[test_indices, ]
+dtm_training <- dtm[-test_indices, ]
+```
+
+# 10. Create decision tree
+Now that we have a training set, we can finally use this training set to make some actual models. The first model we make is a decision tree.
+
+## 10.1 Create tree {.tabset  .tabset-pills}
+### Question
+Create a decision tree of the training data, to see if you can determine if you are the author of a message (`is_me`) using the words used in the messages, and save this tree in a variable called `tree`. View the tree afterwards, to see the result.
+
+### Hint 1
+You can use the `rpart()` function to create a decision tree. Use `?rpart` to find out how this function works.
+
+### Hint 2
+You want to know if the column `is_me` is dependent on all the other columns in your dataset, which contain the words. You can select all other columns using a `.`. This will give you the formula `is_me ~ .`
+
+### Hint 3
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Answer
+```{r}
+tree <- rpart( is_me ~ ., data = dtm_training, method = "class" )
+tree
+```
+
+## 10.2 Plot tree {.tabset  .tabset-pills}
+### Question
+Now try to plot this tree, so you can see it in a nice visual
+
+### Hint 1
+You can use the `rpart.plot()` function to plot a decision tree. Use `?rpart.plot` to find out how this function works.
+
+### Hint 2
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Answer
+```{r}
+rpart.plot(tree, type = 4, fallen = F)
+```
+
+## 10.3 Make predictions {.tabset  .tabset-pills}
+### Question
+Now use this model to make predictions about your test data.
+
+### Hint 1
+You can use the `predict()` function to make predictions using a model. Use `?predict` to find out how this function works.
+
+### Hint 2
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Answer
+```{r}
+prediction_tree <- predict(tree, newdata = dtm_test, type = "class")
+prediction_tree <- prediction_tree  == "TRUE"
+```
+
+## 10.4 Judge accuracy {.tabset  .tabset-pills}
+### Question
+Now that you have a prediction for each row saved, you can compare it to the actual values. To do that, you first need to make a table with in one column the actual values and in one column the predicted values. After this, you can automatically count where they are the same and where not. This will give you a table showing where the predictions and truths line up. Try to make such a table.
+
+You can also calculate the overall accuracy, by checking if your your predicted values are the same as the actual values (`1`) or not (`0`) and then calculating the mean of that.
+
+### Hint 1
+You can create a table with the real and predicted values using the `tibble()` function, and then see if they align using the `tabyl()` function. Find out how these functions work using `?tibble` and `?tabyl`
+
+### Hint 2
+You can check if the prediction and truth are the same using the `==` operator.
+
+### Hint 3
+You can select the column with the real values from your test set using the `$` sign, like this:
+```{r eval=F}
+dtm_test$is_me
+```
+
+### Hint 4
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Answer
+```{r}
+# Accuracy table
+tibble(predicted = prediction_tree, truth = dtm_test$is_me) %>% 
+  tabyl(predicted, truth) %>% 
+  adorn_title("combined")
+
+# Accuracy number
+mean(prediction_tree == dtm_test$is_me)
+```
+
+# 11. Make logistic regression
+Instead of using a prediction tree, we can also make a *generalized linear model*. This will give us a formula with which we can calculate for each case if it is written by you or not.
+
+## 11.1 Determine importance {.tabset  .tabset-pills}
+### Question
+To determine which variables we will use in our model, we can look what the most influencial variables are according to our prediction tree. Try to find out the 2 most influencial variables.
+
+### Hint 1
+You can get the most important variables using `tree$variable.importance`
+
+### Hint 2
+You can use `head()` to only get the first few items in the list. Use `?head` to find out how this function works
+
+### Answer
+```{r}
+head(tree$variable.importance, 2)
+```
+  
+## 11.2 Create regression {.tabset  .tabset-pills}
+### Question
+Now I know in my dataset `can` and `ill` are the most influencial variables. Now I will create a generalized linear model using your training dataset, to see if `is_me` is dependent on `can` and `ill`. Check your linear model afterwards.
+
+### Hint 1
+You can make generalized linear models using the `glm` function. Try to find out how this function works using `?glm`.
+
+### Hint 2
+I want to find out if `is_me` is dependent on `can` and `ill`, so my formula is `is_me ~ can + ill`
+
+### Hint 3
+You can view your model using the `summary()` function. Try to find out how this function works using `?summary`.
+
+### Hint 4
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Answer
+```{r}
+logistic_regression <- glm(is_me ~ can + ill, 
+                               data = dtm_training, family = binomial)
+summary(logistic_regression)
+```
+
+## 11.3 Make predictions {.tabset  .tabset-pills}
+### Question
+Now use this model to make predictions about your test data. Since these predictions will be numbers between 0 and 1, we assume everything higher then `.5` is `TRUE` and lower is `FALSE`
+
+### Hint 1
+Look at what you did in question 10.3 and try to do something similar.
+
+### Hint 2
+To check if a value is higher or lower then .5, you can do `value > .5`
+
+### Hint 3
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Answer
+```{r}
+prediction_glm <- predict(logistic_regression, newdata = dtm_test, type = "response")
+prediction_glm <- prediction_glm > .5
+```
+
+## 11.4 Judge accuracy {.tabset  .tabset-pills}
+### Question
+Now that you have a prediction for each row, we can determine the accuracy again. Give a accuracy table and number.
+
+### Hint 1
+Look at what you did in question 10.4 and try to do something similar.
+
+### Hint 3
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Answer
+```{r}
+tibble(predicted = prediction_glm, truth = dtm_test$is_me) %>% 
+  tabyl(predicted, truth) %>% 
+  adorn_title("combined")
+
+mean(prediction_glm == dtm_test$is_me)
+```
+
+# 12. Wordcount based logistic regression
+Instead of looking at the words used, we can also try to look at the **number** of words used, to see if that might give a more accurate prediction
+
+## 12.1 Count words {.tabset  .tabset-pills}
+### Question
+Try to count the number of words used for each document. Also add the `is_me` variable and convert it to an `integer`, because that is needed for future questions.
+
+N.B. This is never done in the lessons, so you can just look at the answers, but you can also try to figure it out yourself if you like a challenge
+
+### Hint 1
+In question 5.2 you determined the total amount for each word over all documents using the `colSums()` function. Now you want to determine for each document the total amount over all words, so you can do something similar using the `rowSums()` function
+
+### Hint 2
+Similarly to question 5.4, you can use the `tibble()` function, to create a table with the total wordcount for each document.
+
+### Answer
+```{r}
+wc <- corpus %>%
+  DocumentTermMatrix() %>% 
+  as.matrix() %>% 
+  rowSums() %>%
+  tibble(
+    count = .,
+    is_me = as.integer(meta(corpus)$is_me)
+  )
+```
+
+## 12.2 Split test and train {.tabset  .tabset-pills}
+### Question
+Now that you have an overview for all documents of the wordcount, you need to split that again in a training and testing part. You can use the same indeces you created before.
+
+### Hint 1
+Look what you did at question 9.2 and try to do something similar.
+
+### Answer
+```{r}
+wc_test <- wc[test_indices, ]
+wc_training <- wc[-test_indices, ]
+```
+
+## 12.3 Create model {.tabset  .tabset-pills}
+### Question
+Now we can create a generalized linear model to see if `is_me` is dependent on the wordcount (`count`). Tidy up the model to view it afterwards.
+
+### Hint 1
+Look what you did at question 11.2 and try to do something similar.
+
+### Hint 2
+Take a look at what you did in the [tutorial about _Generalised linear models_](https://canvas.utwente.nl/courses/7148/files/2029555). Is there any code in there you can use?
+
+### Hint 3
+You want to know if `is_me` is dependent on the `count`, so your formula is `is_me ~ count`
+
+### Hint 4
+You can use the `tidy()` function to tidy up your model.
+
+### Hint 5
+Look at this code fromt he tutorial, and try to modify it for your own code
+```{r eval=F}
+model <- workstress %>% 
+  glm(WRSD ~ hours.at.work, data = ., family = binomial) 
+
+library(broom)
+model %>% 
+  tidy()
+```
+
+### Answer
+```{r}
+model <- wc_training %>% 
+  glm(is_me ~ count, data = ., family = binomial)
+tidy(model)
+```
+
+## 12.4 Visualize model {.tabset  .tabset-pills}
+### Question
+You can also show this regression in a plot. Create a scatterplot using `ggplot` of your plotpoints, and add a regression line to it.
+
+### Hint 1
+To make plots with `ggplot` you always need at least two functions.
+The first function you need is `ggplot()`. This is required for every plot you make. This function basically creates the axis for the plot. As an argument for this function you need to put in an aestetics map (`aes()`). With this map, you tell R which visual elements represent which data. You can link variables, for example, to the `x`, `y`, `color` and `fill` of your graph.
+
+Now that you created the background with `ggplot()` you can add layers to it with the actual graphs using the `+` sign. For example, you can use `geom_point()` for a scatterplot, `geom_line()` for a line, `geom_smooth()` for a regression line, or `geom_col()` for a bar chart.
+
+### Hint 2
+Take a look at what you did in the [tutorial about _Generalised linear models_](https://canvas.utwente.nl/courses/7148/files/2029555). Is there any code in there you can use?
+
+### Hint 3
+Look at this code from the tutorial. Can you modify it to use it in your own code?
+```{r eval=F}
+workstress %>% 
+  ggplot(aes(x = hours.at.work, y = WRSD)) +
+  geom_point() +
+  geom_smooth(method = "glm", method.args = list(family = binomial), se = F)
+```
+
+### Answer
+```{r}
+wc_training %>% 
+  ggplot(aes(y = is_me, x = count)) +
+  geom_point() +
+  geom_smooth(method = "glm", method.args = list(family = binomial), se = F)
+```
+
+## 12.5 Judge accuracy {.tabset  .tabset-pills}
+### Question
+Now that you have a new model, try to make predictions again and determine the accuracy. Give a accuracy table and number.
+
+### Hint 1
+Look at what you did in question 11.3 and 11.4 and try to do something similar.
+
+### Hint 3
+Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
+
+### Answer
+```{r}
+prediction_wc <- predict(model, newdata = wc_test, type = "response")
+prediction_wc <- prediction_wc > .5
+
+tibble(predicted = prediction_wc, truth = wc_test$is_me) %>% 
+  tabyl(predicted, truth) %>% 
+  adorn_title("combined")
+
+mean(prediction_wc == wc_test$is_me)
+```
+
+# 13. Reflect
+Which model had the highest accuracy in predicting the message author. Why do you think that is? Can you think of any way to improve the accuracy of some of the models?
