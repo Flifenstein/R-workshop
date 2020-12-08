@@ -84,7 +84,7 @@ library(broom)
 
 # 2. Export and import data
 ## 2.1 Export Whatsapp conversation
-Go to a WhatsApp conversation with someone and export it. You can do that by pressing the 3 dots in the top-right corner, them press **More** and then press **Export chat**.
+Go to a WhatsApp conversation with someone and export it. You can do that by pressing the 3 dots in the top-right corner, them press **More** and then press **Export chat**. Sadly, this feature isn't available in Germany. If you are in Germany, please ask someone else to export a chat history for you.
 
 <video src="files/WA_export.mp4" height="480px" loop muted autoplay></video>
 
@@ -1216,7 +1216,7 @@ Now that you have a prediction for each row, we can determine the accuracy again
 ### Hint 1
 Look at what you did in question 10.4 and try to do something similar.
 
-### Hint 3
+### Hint 2
 Take a look at what you did in the [tutorial about _Statistical learning_](https://canvas.utwente.nl/courses/7148/files/2059521). Is there any code in there you can use?
 
 ### Answer
