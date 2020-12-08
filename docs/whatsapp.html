@@ -395,6 +395,14 @@ install.packages(&quot;janitor&quot;)
 install.packages(&quot;broom&quot;)</code></pre>
 <p>Then you can import them</p>
 <pre class="r"><code>library(tidyverse)
+## -- Attaching packages --------------------------------------- tidyverse 1.3.0 --
+## v ggplot2 3.3.2     v purrr   0.3.4
+## v tibble  3.0.4     v dplyr   1.0.2
+## v tidyr   1.1.2     v stringr 1.4.0
+## v readr   1.4.0     v forcats 0.5.0
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
 library(tm)
 ## Loading required package: NLP
 ## 
@@ -419,7 +427,7 @@ library(broom)</code></pre>
 <h1>2. Export and import data</h1>
 <div id="export-whatsapp-conversation" class="section level2">
 <h2>2.1 Export Whatsapp conversation</h2>
-<p>Go to a WhatsApp conversation with someone and export it. You can do that by pressing the 3 dots in the top-right corner, them press <strong>More</strong> and then press <strong>Export chat</strong>.</p>
+<p>Go to a WhatsApp conversation with someone and export it. You can do that by pressing the 3 dots in the top-right corner, them press <strong>More</strong> and then press <strong>Export chat</strong>. Sadly, this feature isn’t available in Germany. If you are in Germany, please ask someone else to export a chat history for you.</p>
 <video src="files/WA_export.mp4" height="480px" loop muted autoplay>
 </video>
 <p>Then you can send the exported file to your computer, using e-mail, for example.</p>
@@ -1944,8 +1952,8 @@ prediction_glm &lt;- prediction_glm &gt; .5</code></pre>
 <h3>Hint 1</h3>
 <p>Look at what you did in question 10.4 and try to do something similar.</p>
 </div>
-<div id="hint-3-24" class="section level3">
-<h3>Hint 3</h3>
+<div id="hint-2-36" class="section level3">
+<h3>Hint 2</h3>
 <p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
 </div>
 <div id="answer-38" class="section level3">
@@ -1975,7 +1983,7 @@ prediction_glm &lt;- prediction_glm &gt; .5</code></pre>
 <h3>Hint 1</h3>
 <p>In question 5.2 you determined the total amount for each word over all documents using the <code>colSums()</code> function. Now you want to determine for each document the total amount over all words, so you can do something similar using the <code>rowSums()</code> function</p>
 </div>
-<div id="hint-2-36" class="section level3">
+<div id="hint-2-37" class="section level3">
 <h3>Hint 2</h3>
 <p>Similarly to question 5.4, you can use the <code>tibble()</code> function, to create a table with the total wordcount for each document.</p>
 </div>
@@ -2017,11 +2025,11 @@ wc_training &lt;- wc[-test_indices, ]</code></pre>
 <h3>Hint 1</h3>
 <p>Look what you did at question 11.2 and try to do something similar.</p>
 </div>
-<div id="hint-2-37" class="section level3">
+<div id="hint-2-38" class="section level3">
 <h3>Hint 2</h3>
 <p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2029555">tutorial about <em>Generalised linear models</em></a>. Is there any code in there you can use?</p>
 </div>
-<div id="hint-3-25" class="section level3">
+<div id="hint-3-24" class="section level3">
 <h3>Hint 3</h3>
 <p>You want to know if <code>is_me</code> is dependent on the <code>count</code>, so your formula is <code>is_me ~ count</code></p>
 </div>
@@ -2062,11 +2070,11 @@ tidy(model)</code></pre>
 <p>To make plots with <code>ggplot</code> you always need at least two functions. The first function you need is <code>ggplot()</code>. This is required for every plot you make. This function basically creates the axis for the plot. As an argument for this function you need to put in an aestetics map (<code>aes()</code>). With this map, you tell R which visual elements represent which data. You can link variables, for example, to the <code>x</code>, <code>y</code>, <code>color</code> and <code>fill</code> of your graph.</p>
 <p>Now that you created the background with <code>ggplot()</code> you can add layers to it with the actual graphs using the <code>+</code> sign. For example, you can use <code>geom_point()</code> for a scatterplot, <code>geom_line()</code> for a line, <code>geom_smooth()</code> for a regression line, or <code>geom_col()</code> for a bar chart.</p>
 </div>
-<div id="hint-2-38" class="section level3">
+<div id="hint-2-39" class="section level3">
 <h3>Hint 2</h3>
 <p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2029555">tutorial about <em>Generalised linear models</em></a>. Is there any code in there you can use?</p>
 </div>
-<div id="hint-3-26" class="section level3">
+<div id="hint-3-25" class="section level3">
 <h3>Hint 3</h3>
 <p>Look at this code from the tutorial. Can you modify it to use it in your own code?</p>
 <pre class="r"><code>workstress %&gt;% 
@@ -2094,7 +2102,7 @@ tidy(model)</code></pre>
 <h3>Hint 1</h3>
 <p>Look at what you did in question 11.3 and 11.4 and try to do something similar.</p>
 </div>
-<div id="hint-3-27" class="section level3">
+<div id="hint-3-26" class="section level3">
 <h3>Hint 3</h3>
 <p>Take a look at what you did in the <a href="https://canvas.utwente.nl/courses/7148/files/2059521">tutorial about <em>Statistical learning</em></a>. Is there any code in there you can use?</p>
 </div>
