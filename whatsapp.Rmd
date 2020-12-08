@@ -107,7 +107,7 @@ Select the file below to convert it to a corpus that can be used in R. This can 
       // Convert to JSON
       for (l = 0; l < text.length; ++l) {
         var time = text[l].split(" - ").slice(0,-1)[0];
-        if (!/^[0-9\.\/:, APM]{11,19}$/.test(time)) time = undefined;
+        if (!/^[0-9\.\/:,\- APM]{11,19}$/.test(time)) time = undefined;
         if (!time && messages.length > 0) {
           messages[messages.length - 1].text += "\n" + text[l]
         } else {
