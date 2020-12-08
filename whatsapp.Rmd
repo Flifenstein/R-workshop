@@ -101,76 +101,78 @@ Select the file below to convert it to a corpus that can be used in R. This can 
     var file = e.target.files[0];
     var fr = new FileReader();
     fr.onload = function(e) {
-      var text = e.target.result.split("\n");
-      var messages = [];
-      var authors = {};
-      // Convert to JSON
-      for (l = 0; l < text.length; ++l) {
-        var time = text[l].split(" - ").slice(0,-1)[0];
-        if (!/^[0-9\.\/:,\- APM]{11,19}$/.test(time)) time = undefined;
-        if (!time && messages.length > 0) {
-          messages[messages.length - 1].text += "\n" + text[l]
-        } else {
-          if (time) text[l] = text[l].slice((time + " - ").length);
-          var author = text[l].split(": ").slice(0,-1)[0];
-          if (author) {
-            text[l] = text[l].slice((author + ": ").length);
-            if (!authors[author]) authors[author] = {name: author, messages: 0};
-            authors[author].messages++;
+      try {
+        var text = e.target.result.split("\n");
+        var messages = [];
+        var authors = {};
+        // Convert to JSON
+        for (l = 0; l < text.length; ++l) {
+          var time = text[l].split(" - ").slice(0,-1)[0];
+          if (!/^[0-9\.\/:,\- APM]{11,19}$/.test(time)) time = undefined;
+          if (!time && messages.length > 0) {
+            messages[messages.length - 1].text += "\n" + text[l]
+          } else {
+            if (time) text[l] = text[l].slice((time + " - ").length);
+            var author = text[l].split(": ").slice(0,-1)[0];
+            if (author) {
+              text[l] = text[l].slice((author + ": ").length);
+              if (!authors[author]) authors[author] = {name: author, messages: 0};
+              authors[author].messages++;
+            }
+            messages.push({
+              "time": time,
+              "author": author,
+              "text": text[l]
+            });
           }
-          messages.push({
-            "time": time,
-            "author": author,
-            "text": text[l]
-          });
         }
-      }
-      console.log(messages);
-      console.log(authors);
-      // Convert to ZIP
-      var zip = new JSZip();
-      var counter = 0;
-      messages = messages.filter(a => a.author)
-      for (i = 0; i < messages.length; ++i) {
-        if (i>0 && messages[i-1].time == messages[i].time) {
-          counter++;
+        console.log(messages);
+        console.log(authors);
+        // Convert to ZIP
+        var zip = new JSZip();
+        var counter = 0;
+        messages = messages.filter(a => a.author)
+        for (i = 0; i < messages.length; ++i) {
+          if (i>0 && messages[i-1].time == messages[i].time) {
+            counter++;
+          } else {
+            counter = 0;
+          }
+          var filename = 
+            messages[i].author.replace(/["\*:<>?\/\\|]/g,"_") + 
+            "/" + 
+            messages[i].time.replace(/["\*:<>?\/\\|]/g,"_") + 
+            (counter ? " (" + counter + ")" : "") + 
+            ".txt";
+          ["<Media omitted>"].forEach(a => messages[i].text = messages[i].text.replaceAll(a,""));
+          if (messages[i].author && messages[i].text) zip.file(filename, messages[i].text);
+        }
+        console.log(zip);
+        //download zip
+        zip.generateAsync({type:"blob"})
+        .then(function (blob) {
+          var link = document.createElement("a"); // Or maybe get it from the current document
+          link.href = URL.createObjectURL(blob);
+          link.download = file.name.replace(".txt",".zip");
+          document.body.appendChild(link);
+          link.click();
+          URL.revokeObjectURL(link.href);
+          document.body.removeChild(link);
+          delete link;
+        });
+        //adjust code
+        authors = Object.values(authors).sort((a,b) => a.messages - b.messages).sort((a,b) => file.name.indexOf(a.name));
+        if (authors.length >= 2) {
+          var path = fakepath.replace(".txt","") + (fakepath.indexOf("/") == -1 ? "\\" : "/");
+          var path_a = JSON.stringify(path + authors[0].name.replace(/["\*:<>?\/\\|]/g,"_"));
+          var path_b = JSON.stringify(path + authors[1].name.replace(/["\*:<>?\/\\|]/g,"_"));
         } else {
-          counter = 0;
+          var path_a = JSON.stringify("C:\\fakepath\\WhatsApp Chat with Ioana Frîncu\\Wouter Stoter");
+          var path_b = JSON.stringify("C:\\fakepath\\WhatsApp Chat with Ioana Frîncu\\Ioana Frîncu");
         }
-        var filename = 
-          messages[i].author.replace(/["\*:<>?\/\\|]/g,"_") + 
-          "/" + 
-          messages[i].time.replace(/["\*:<>?\/\\|]/g,"_") + 
-          (counter ? " (" + counter + ")" : "") + 
-          ".txt";
-        ["<Media omitted>"].forEach(a => messages[i].text = messages[i].text.replaceAll(a,""));
-        if (messages[i].author && messages[i].text) zip.file(filename, messages[i].text);
-      }
-      console.log(zip);
-      //download zip
-      zip.generateAsync({type:"blob"})
-      .then(function (blob) {
-        var link = document.createElement("a"); // Or maybe get it from the current document
-        link.href = URL.createObjectURL(blob);
-        link.download = file.name.replace(".txt",".zip");
-        document.body.appendChild(link);
-        link.click();
-        URL.revokeObjectURL(link.href);
-        document.body.removeChild(link);
-        delete link;
-      });
-      //adjust code
-      authors = Object.values(authors).sort((a,b) => a.messages - b.messages).sort((a,b) => file.name.indexOf(a.name));
-      if (authors.length >= 2) {
-        var path = fakepath.replace(".txt","") + (fakepath.indexOf("/") == -1 ? "\\" : "/");
-        var path_a = JSON.stringify(path + authors[0].name.replace(/["\*:<>?\/\\|]/g,"_"));
-        var path_b = JSON.stringify(path + authors[1].name.replace(/["\*:<>?\/\\|]/g,"_"));
-      } else {
-        var path_a = JSON.stringify("C:\\fakepath\\WhatsApp Chat with Ioana Frîncu\\Wouter Stoter");
-        var path_b = JSON.stringify("C:\\fakepath\\WhatsApp Chat with Ioana Frîncu\\Ioana Frîncu");
-      }
-      document.querySelectorAll("#adjust_names .hljs-string")[0].innerText = path_a;
-      document.querySelectorAll("#adjust_names .hljs-string")[1].innerText = path_b;
+        document.querySelectorAll("#adjust_names .hljs-string")[0].innerText = path_a;
+        document.querySelectorAll("#adjust_names .hljs-string")[1].innerText = path_b;
+      } catch(e) {alert(e)}
     }
     fr.readAsText(file);
   }
