@@ -450,11 +450,17 @@ library(broom)</code></pre>
         // Convert to JSON
         for (l = 0; l < text.length; ++l) {
           var time = text[l].split(" - ").slice(0,-1)[0];
-          if (!/^[0-9\.\/:,\- APM]{11,19}$/.test(time)) time = undefined;
+          if (!/^[0-9\.\/:,\-\[ APM]{11,20}$/.test(time)) {
+            time = text[l].slice(1).split("] ").slice(0,-1)[0];
+            console.log(time)
+            if (!text[l].startsWith("[") || !/^[0-9\.\/:,\-\[ APM]{11,20}$/.test(time)) {
+              time = undefined;
+            }
+          }
           if (!time && messages.length > 0) {
             messages[messages.length - 1].text += "\n" + text[l]
           } else {
-            if (time) text[l] = text[l].slice((time + " - ").length);
+            if (time) text[l] = text[l].slice((time).length + 3);
             var author = text[l].split(": ").slice(0,-1)[0];
             if (author) {
               text[l] = text[l].slice((author + ": ").length);
@@ -514,7 +520,7 @@ library(broom)</code></pre>
         }
         document.querySelectorAll("#adjust_names .hljs-string")[0].innerText = path_a;
         document.querySelectorAll("#adjust_names .hljs-string")[1].innerText = path_b;
-      } catch(e) {alert(e)}
+      } catch(e) {alert(e);console.error(e);}
     }
     fr.readAsText(file);
   }
